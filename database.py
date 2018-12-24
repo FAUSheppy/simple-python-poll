@@ -30,8 +30,8 @@ def init():
                     show_results integer,\
                     date text)'''
                     )
-    c.execute("CREATE TABLE {}(name_option text, count)".format(CFG("options_table_name"))
-    c.execute("CREATE TABLE {}(token text, name text, options_selected text)".format(CFG("tokens_table_name"))
+    c.execute("CREATE TABLE {}(name_option text, count)".format(CFG("options_table_name")))
+    c.execute("CREATE TABLE {}(token text, name text, options_selected text)".format(CFG("tokens_table_name")))
     closeDB(conn)
 
 def checkTokenValid(cursor, token, poll_name):
@@ -48,7 +48,7 @@ def incrementOption(cursor, poll_name, option):
     req = "UPDATE {} SET count = count + 1 WHERE name_option={}".format(CFG("options_table_name"), key)
     c.execute(req)
 
-def vote(poll_name, options_string, token_used="DUMMY_INVALID_TOKEN")
+def vote(poll_name, options_string, token_used="DUMMY_INVALID_TOKEN"):
     conn, c = connectDB()
     # check token
     token_valid = checkTokenValid(c, token_used, poll_name)
@@ -62,7 +62,7 @@ def vote(poll_name, options_string, token_used="DUMMY_INVALID_TOKEN")
 
     closeDB(conn)
 
-def getOptionCount(c, poll_name, option)
+def getOptionCount(c, poll_name, option):
     key = poll_name + "-" + option
     req = "SELECT count WHERE name_option={}".format(CFG("options_table_name"), key)
     return queryOne(c, req)
@@ -105,7 +105,7 @@ def createPoll(poll_name, options_arr, has_tokens, openresults=True):
     conn, c = connectDB()
 
     # actual poll
-    req = "INSERT INTO {} VALUE ({}, {}, {}, {})".format(CFG("poll_table_name")\
+    req = "INSERT INTO {} VALUE ({}, {}, {}, {})".format(CFG("poll_table_name"),\
                     poll_name,\
                     ",".join(options_arr),\
                     str(int(has_tokens)),\

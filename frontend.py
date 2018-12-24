@@ -21,8 +21,10 @@
 #    - option n [count] percent
 
 from cpwrap import CFG
-HTML_DIR = "html_js_partials/"
 import database as db
+import os.path
+
+HTML_DIR = "html_js_partials/"
 
 def readPartial(name):
     if not name.endswith((".html",".js",".css")):
@@ -32,11 +34,11 @@ def readPartial(name):
         return f.read()
 
 def buildStartPage():
-    return readPartial(base).format(title="simple-poll", body=readPartial(start-page))
+    return readPartial("base").format(title="simple-poll", body=readPartial("start-page"))
 
 def buildCreatePoll(poll_name):
-    body = ""
-    return readPartial(base).format(title="poll-create", body=body)
+    body = readPartial("create-poll-partial") % poll_name
+    return readPartial("base").format(title="poll-create", body=body)
 
 def buildPostCreatePoll(poll_name):
     pass

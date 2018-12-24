@@ -1,11 +1,12 @@
 #!/usr/bin/python3
-from flask import Flask, requests
+from flask import Flask, request
 from cpwrap import CFG
+import frontend
 
 app = Flask(CFG("appName"))
 
-def getParam(param):
-    return requests.args.get(param)
+def getPollName():
+    return request.args.get("name")
 
 ########################################################
 
@@ -15,33 +16,27 @@ def startPage():
 
 @app.route('/create')
 def createPoll():
-    poll_name = getParam(dd"name") 
-    return frontend.buildCreatePoll(poll_name)
+    return frontend.buildCreatePoll(getPollName())
 
 @app.route('/post-create')
 def postCreatePoll():
-    poll_name = getParam("name") 
-    return frontend.buildPostCreatePoll(poll_name)
+    return frontend.buildPostCreatePoll(getPollName())
 
 @app.route('/ask-token')
 def askToken():
-    poll_name = getParam("name") 
-    return frontend.buildAskToken(poll_name)
+    return frontend.buildAskToken(getPollName())
 
 @app.route('/vote')
 def voteInPoll():
-    poll_name = getParam("name") 
-    return frontend.buildVoteInPoll(poll_name)
+    return frontend.buildVoteInPoll(getPollName())
 
 @app.route('/post-vote')
 def postVote():
-    poll_name = getParam("name") 
-    return frontend.buildPostVote(poll_name)
+    return frontend.buildPostVote(getPollName())
 
 @app.route('/results')
 def showResults():
-    poll_name = getParam("name") 
-    return frontend.buildShowResults(poll_name)
+    return frontend.buildShowResults(getPollName())
 
 if __name__ == "__main__":
     app.run(host='127.0.0.1')

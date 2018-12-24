@@ -1,8 +1,8 @@
 <script>
-	def goto-create(){
+    function create(){
 		input = document.getElementById("input").value
-		window.location.replace(window.location.origin + "/" + input);
+		window.location.replace(window.location.origin + "/create?name=" + input);
 	}
 </script> 
 <input type="text" id="input"> 
-<button onclick="goto-create()">Create</button>
+<button onclick="create()">Create</button>

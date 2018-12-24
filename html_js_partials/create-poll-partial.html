@@ -1,7 +1,41 @@
 <script>
-    // TODO wait input
-    // document.write new option
-</script>
-<!-- basic webform -->
+    function cancle(){
+		window.location.replace(window.location.origin);
+	}
 
-<!-- transmitt webform -->
+    function submitt(){
+		options = document.getElementsByClassName("option-input")
+		optString = ""
+		for(x in options){
+			if(options[x].value){
+				optString += options[x].value
+				if(x != options.length -1){
+					optString += ","
+				}
+			}
+		}
+		window.location.replace(window.location.origin + "/post-create?name=" + "%s" + "&options=" + optString)
+	}
+
+    function extend(){
+		var span = document.createElement('span')
+		var inputForm = document.createElement("input")
+		inputForm.setAttribute("type", "text")
+		inputForm.setAttribute("class", "option-input")
+		span.appendChild(inputForm)
+		document.getElementById("options-container").appendChild(span)
+    }
+</script>
+<div id="main-container">
+	<div id="options-container">
+		<span> <input type="text" class="option-input"> </span>
+		<span> <input type="text" class="option-input"> </span>
+		<span> <input type="text" class="option-input"> </span>
+	</div>
+	
+	<div id="button-container">
+		<button onclick="extend()">+</button>
+		<button onclick="submitt()">Create</button>
+		<button onclick="cancle()">Cancle</button>
+	</div>
+</div>
