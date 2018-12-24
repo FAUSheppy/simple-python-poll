@@ -31,7 +31,7 @@ def init():
                     date text)'''
                     )
     c.execute("CREATE TABLE {}(name_option text, count)".format(CFG("options_table_name"))
-    c.execute("CREATE TABLE {}(token text, name text, options_selected text)".format(CFG("options_table_name"))
+    c.execute("CREATE TABLE {}(token text, name text, options_selected text)".format(CFG("tokens_table_name"))
     closeDB(conn)
 
 def checkTokenValid(cursor, token, poll_name):
@@ -85,8 +85,40 @@ def getResults(poll_name):
 
     conn.close()
     return results
-        
 
-# check token TODO
-    # check if token still db
-    # return options if already used
+def insertOption(c, poll_name, option):
+    key = poll_name + option
+    count = 0
+    req = "INSERT INTO {} VALUE ({}, {})".format(CFG("options_table_name"), key, count)
+    c.execute(req)
+
+def genSingleToken(length=5):
+    return ''.join(random.choices(string.ascii_uppercase + string.digits, k=length))
+
+def genTokens(c, poll_name, count=5):
+    tokens = [ genSingleToken() for x in range(0,5) ]
+    for token in tokens:
+        req = "INSERT INTO {} VALUE ({}, {}, {})".format(CFG("tokens_table_name"), poll_name, token , "NONE")
+        c.execute(req)
+
+def createPoll(poll_name, options_arr, has_tokens, openresults=True):
+    conn, c = connectDB()
+
+    # actual poll
+    req = "INSERT INTO {} VALUE ({}, {}, {}, {})".format(CFG("poll_table_name")\
+                    poll_name,\
+                    ",".join(options_arr),\
+                    str(int(has_tokens)),\
+                    str(int(openresults)),\
+                    "NONE")
+    c.execute(r)
+
+    # tokens if needed
+    if has_tokens:
+        genTokens(c, poll_name)
+
+    # update options
+    for opt in options_arr:
+        insertOption(c, poll_name, opt)
+    
+    closeDB(conn)
