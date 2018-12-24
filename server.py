@@ -10,7 +10,7 @@ def getParam(param):
 
 @app.route('/')
 def startPage():
-    return "<span style='color:red'>I am app 1</span>"
+    return frontend.buildStartPage()
 
 @app.route('/create')
 def createPoll():
@@ -25,7 +25,7 @@ def postCreatePoll():
 @app.route('/ask-token')
 def askToken():
     poll_name = getParam("name") 
-    return frontend.askToken(poll_name)
+    return frontend.buildAskToken(poll_name)
 
 @app.route('/vote')
 def voteInPoll():

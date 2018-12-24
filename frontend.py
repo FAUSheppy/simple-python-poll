@@ -19,3 +19,36 @@
 # results-page
 #    - option 1 [count] percent
 #    - option n [count] percent
+
+from cpwrap import CFG
+HTML_DIR = "html_js_partials/"
+import database as db
+
+def readPartial(name):
+    if not name.endswith((".html",".js",".css")):
+        name = name + ".html"
+    path = os.path.join(HTML_DIR, name)
+    with open(path,"r") as f:
+        return f.read()
+
+def buildStartPage():
+    return readPartial(base).format(title="simple-poll", body=readPartial(start-page))
+
+def buildCreatePoll(poll_name):
+    body = ""
+    return readPartial(base).format(title="poll-create", body=body)
+
+def buildPostCreatePoll(poll_name):
+    pass
+
+def buildAskToken(poll_name):
+    pass
+
+def buildVoteInPoll(poll_name):
+    pass
+
+def buildPostVote(poll_name):
+    pass
+
+def buildShowResults(poll_name):
+    pass
