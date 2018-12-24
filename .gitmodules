@@ -1,0 +1,3 @@
+[submodule "configparse_wrapper"]
+	path = configparse_wrapper
+	url = https://gitlab.com/Sheppy_/configparse_wrapper
