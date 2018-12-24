@@ -1,0 +1,14 @@
+database:
+    record-vote     [x]
+    create-poll     [x]
+    query-results   [x]
+    query-tokens    [ ]
+
+frontend:
+    main-page
+    createpoll-page [ ]
+    ask-toke-page   [ ]
+    result-page     [ ]
+    cast-vote-page  [ ]
+    post-vote-page  [ ]
+    postcreate-page [ ]

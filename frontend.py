@@ -5,7 +5,7 @@
 #    - new option -
 #    - cancle --------------------- submitt --
 #    - use tokens [ ]
-# poll create page:
+# post create page:
 #    center: link to poll (copyable)
 # ask token page:
 #    center: enter token
