@@ -5,7 +5,7 @@ database:
     query-tokens    [ ]
 
 frontend:
-    main-page
+    main-page       [ ]
     createpoll-page [ ]
     ask-toke-page   [ ]
     result-page     [ ]

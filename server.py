@@ -1,3 +1,8 @@
-def application(env, start_response):
-    start_response('200 OK', [('Content-Type','text/html')])
-    return [b"Hello World"]
+from flask import Flask
+from configparse_wrapper.cpwrap import CFG
+
+app = Flask(CFG("appName"))
+
+@app.route('/')
+def main(env, start_response):
+    return "<span style='color:red'>I am app 1</span>"

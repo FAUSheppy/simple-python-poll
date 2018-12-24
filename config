@@ -1,5 +1,7 @@
 [all]
 
+appName = atlantispoll
+
 dbname = test.sqlite3
 no_css = true
 

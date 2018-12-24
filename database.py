@@ -1,5 +1,5 @@
 import sqlite3
-from configparse_wrapper.cpwrap import CFG
+from cpwrap import CFG
 
 # DB-structure:
 # db-poll:    name | options | tokens? | openresults? | date
