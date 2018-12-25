@@ -134,3 +134,10 @@ def createPoll(poll_name, options_arr, has_tokens, openresults=True):
     
     closeDB(conn)
     return tokens
+
+def getOptions(poll_name):
+    conn, c = connectDB()
+    options_str = queryOne(c, "SELECT options FROM {} WHERE name='{}'".format(CFG("poll_table_name"), poll_name))
+    options = options_str.split(",")
+    closeDB(conn)
+    return options

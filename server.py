@@ -27,10 +27,6 @@ def postCreatePoll():
     tokens = db.createPoll(getPollName(), arg("options").split(","), useTokens)
     return frontend.buildPostCreatePoll(getPollName(), tokens)
 
-@app.route('/ask-token')
-def askToken():
-    return frontend.buildAskToken(getPollName())
-
 @app.route('/vote')
 def voteInPoll():
     return frontend.buildVoteInPoll(getPollName())
@@ -42,6 +38,10 @@ def postVote():
 @app.route('/results')
 def showResults():
     return frontend.buildShowResults(getPollName())
+
+@app.route('/site.css')
+def css():
+    return app.send_static_file('site.css')
 
 if __name__ == "__main__":
     db.init()
