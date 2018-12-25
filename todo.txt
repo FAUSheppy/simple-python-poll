@@ -5,10 +5,14 @@ database:
     query-tokens    [ ]
 
 frontend:
-    main-page       [ ]
-    createpoll-page [ ]
-    ask-toke-page   [ ]
-    result-page     [ ]
-    cast-vote-page  [ ]
-    post-vote-page  [ ]
-    postcreate-page [ ]
+    main-page       [x]
+    createpoll-page [x]
+    result-page     [x]
+    cast-vote-page  [x]
+    post-vote-page  [x]
+    postcreate-page [x]
+
+functionality:
+    single-answer   [ ]
+    token-check     [ ]
+    hidden-results  [ ]
