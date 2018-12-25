@@ -6,5 +6,5 @@ dbname = test.sqlite3
 no_css = true
 
 poll_table_name   = polls
-option_table_name = options
+options_table_name = options
 tokens_table_name = tokens

@@ -1,5 +1,8 @@
 import sqlite3
+import os.path
 from cpwrap import CFG
+import random
+import string
 
 # DB-structure:
 # db-poll:    name | options | tokens? | openresults? | date
@@ -22,13 +25,15 @@ def queryOne(cursor, reqString):
         return None
 
 def init():
+    if os.path.isfile(CFG("dbname")):
+        return
     conn, c = connectDB()
-    c.execute("CREATE TABLE" + CFG("poll_table_name") + '''(\
+    c.execute("CREATE TABLE " + CFG("poll_table_name") + "(\
                     name text,\
                     options text,\
                     has_tokens integer,\
                     show_results integer,\
-                    date text)'''
+                    date text)"\
                     )
     c.execute("CREATE TABLE {}(name_option text, count)".format(CFG("options_table_name")))
     c.execute("CREATE TABLE {}(token text, name text, options_selected text)".format(CFG("tokens_table_name")))
@@ -89,36 +94,43 @@ def getResults(poll_name):
 def insertOption(c, poll_name, option):
     key = poll_name + option
     count = 0
-    req = "INSERT INTO {} VALUE ({}, {})".format(CFG("options_table_name"), key, count)
-    c.execute(req)
+    params = (key, count)
+    req = "INSERT INTO {} VALUES (?, ?)".format(CFG("options_table_name"))
+    c.execute(req, params)
 
 def genSingleToken(length=5):
-    return ''.join(random.choices(string.ascii_uppercase + string.digits, k=length))
+    return ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(length))
 
 def genTokens(c, poll_name, count=5):
     tokens = [ genSingleToken() for x in range(0,5) ]
     for token in tokens:
-        req = "INSERT INTO {} VALUE ({}, {}, {})".format(CFG("tokens_table_name"), poll_name, token , "NONE")
-        c.execute(req)
+        name = poll_name 
+        options_selected = "NONE"
+        params = (token, name, options_selected)
+        req = "INSERT INTO {} VALUES (?, ?, ?)".format(CFG("tokens_table_name"))
+        c.execute(req, params)
 
 def createPoll(poll_name, options_arr, has_tokens, openresults=True):
     conn, c = connectDB()
 
     # actual poll
-    req = "INSERT INTO {} VALUE ({}, {}, {}, {})".format(CFG("poll_table_name"),\
-                    poll_name,\
-                    ",".join(options_arr),\
-                    str(int(has_tokens)),\
-                    str(int(openresults)),\
-                    "NONE")
-    c.execute(r)
+    name = poll_name
+    options = ",".join(options_arr)
+    has_tokens = str(int(has_tokens))
+    show_results = str(int(openresults))
+    date = "NONE"
+    params = (name, options, has_tokens, show_results, date) 
+    req = "INSERT INTO {} VALUES (?,?,?,?,?)".format(CFG("poll_table_name"))
+    c.execute(req, params)
 
     # tokens if needed
+    tokens = ""
     if has_tokens:
-        genTokens(c, poll_name)
+        tokens = genTokens(c, poll_name)
 
     # update options
     for opt in options_arr:
         insertOption(c, poll_name, opt)
     
     closeDB(conn)
+    return tokens

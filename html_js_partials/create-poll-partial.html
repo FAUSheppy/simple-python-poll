@@ -8,13 +8,14 @@
 		optString = ""
 		for(x in options){
 			if(options[x].value){
-				optString += options[x].value
-				if(x != options.length -1){
+				if(x != 0){
 					optString += ","
 				}
+				optString += options[x].value
 			}
 		}
-		window.location.replace(window.location.origin + "/post-create?name=" + "%s" + "&options=" + optString)
+		window.location.replace(window.location.origin + "/post-create?name=" + "%s" + "&options=" + optString
+                        + "&" + "tokens=0")
 	}
 
     function extend(){

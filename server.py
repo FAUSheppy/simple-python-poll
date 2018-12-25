@@ -2,11 +2,14 @@
 from flask import Flask, request
 from cpwrap import CFG
 import frontend
+import database as db
 
 app = Flask(CFG("appName"))
 
 def getPollName():
     return request.args.get("name")
+def arg(param):
+    return request.args.get(param)
 
 ########################################################
 
@@ -20,7 +23,9 @@ def createPoll():
 
 @app.route('/post-create')
 def postCreatePoll():
-    return frontend.buildPostCreatePoll(getPollName())
+    useTokens = arg("tokens") == "0"
+    tokens = db.createPoll(getPollName(), arg("options").split(","), useTokens)
+    return frontend.buildPostCreatePoll(getPollName(), tokens)
 
 @app.route('/ask-token')
 def askToken():
@@ -39,4 +44,5 @@ def showResults():
     return frontend.buildShowResults(getPollName())
 
 if __name__ == "__main__":
+    db.init()
     app.run(host='127.0.0.1')

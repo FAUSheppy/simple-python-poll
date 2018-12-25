@@ -40,8 +40,8 @@ def buildCreatePoll(poll_name):
     body = readPartial("create-poll-partial") % poll_name
     return readPartial("base").format(title="poll-create", body=body)
 
-def buildPostCreatePoll(poll_name):
-    pass
+def buildPostCreatePoll(poll_name, tokens):
+    return "<h1>Poll Created!</h1>"
 
 def buildAskToken(poll_name):
     pass
