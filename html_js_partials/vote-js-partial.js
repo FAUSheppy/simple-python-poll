@@ -3,15 +3,19 @@ function cancle(){
 }
 
 function submitt(){
-	options = document.getElementsByClassName("vote-option")
+	options  = document.getElementsByClassName("vote-option")
+    token    = document.getElementById("token-field").value
+    pollname = document.getElementById("poll-name").innerText
 	optString = ""
 	for(x in options){
 		if(options[x].checked){
 			if(x != 0){
 				optString += ","
 			}
-			optString += options[x].id + "+" + options[x].checked
+			optString += options[x].id
 		}
 	}
-	window.location.replace(window.location.origin + "/post-vote" + "?" + "selected=" + optString)
+	window.location.replace(window.location.origin + "/post-vote" + "?" + "name=" + pollname
+                                    + "&" + "token=" + token
+                                    + "&" + "selected=" + optString)
 }

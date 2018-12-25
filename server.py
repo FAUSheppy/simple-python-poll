@@ -24,6 +24,8 @@ def createPoll():
 @app.route('/post-create')
 def postCreatePoll():
     useTokens = arg("tokens") == "0"
+    if db.checkPollExists(getPollName()):
+        return "<h1>Poll {} already exists!<h1>".format(getPollName())
     tokens = db.createPoll(getPollName(), arg("options").split(","), useTokens)
     return frontend.buildPostCreatePoll(getPollName(), tokens)
 
@@ -33,7 +35,7 @@ def voteInPoll():
 
 @app.route('/post-vote')
 def postVote():
-    return frontend.buildPostVote(getPollName())
+    return frontend.buildPostVote(getPollName(), arg("token"), arg("selected"))
 
 @app.route('/results')
 def showResults():

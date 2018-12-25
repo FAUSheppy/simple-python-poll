@@ -20,7 +20,9 @@ def closeDB(conn, cursor=None):
 def queryOne(cursor, reqString):
     try:
         cursor.execute(reqString)
-        return cursor.fetchone()[0]
+        ret = cursor.fetchone()
+        if ret:
+            return ret[0]
     except IndexError:
         return None
 
@@ -40,41 +42,42 @@ def init():
     closeDB(conn)
 
 def checkTokenValid(cursor, token, poll_name):
-    req = "SELECT name from {} where token={}".format(CFG("tokens_table_name"),token)
+    req = "SELECT name from {} where token='{}'".format(CFG("tokens_table_name"),token)
     answer = queryOne(cursor, req)
     return answer and answer == poll_name
 
 def checkTokenNeeded(cursor, poll_name):
-    req = "SELECT has_tokens from {} where name={}".format(CFG("poll_table_name"),poll_name)
+    req = "SELECT has_tokens from {} where name='{}'".format(CFG("poll_table_name"),poll_name)
     return queryOne(cursor, req) == "1";
 
 def incrementOption(cursor, poll_name, option):
-    key = poll_name+"-"+opt
-    req = "UPDATE {} SET count = count + 1 WHERE name_option={}".format(CFG("options_table_name"), key)
-    c.execute(req)
+    key = poll_name+"-"+option
+    req = "UPDATE {} SET count=count+1 WHERE name_option = '{}';".format(CFG("options_table_name"), key)
+    print(req)
+    cursor.execute(req)
 
 def vote(poll_name, options_string, token_used="DUMMY_INVALID_TOKEN"):
     conn, c = connectDB()
     # check token
     token_valid = checkTokenValid(c, token_used, poll_name)
-    if not token_valid and checkTokenNeeded():
+    if not token_valid and checkTokenNeeded(c, poll_name):
         raise PermissionError("Poll requires valid token.")
 
     # save changes
     options = options_string.split(",")
     for opt in options:
-        incrementOption(cursor, poll_name, opt)
+        incrementOption(c, poll_name, opt)
 
     closeDB(conn)
 
 def getOptionCount(c, poll_name, option):
     key = poll_name + "-" + option
-    req = "SELECT count WHERE name_option={}".format(CFG("options_table_name"), key)
+    req = "SELECT count WHERE name_option = '{}'".format(CFG("options_table_name"), key)
     return queryOne(c, req)
 
 def getResults(poll_name):
     conn, c = connectDB()
-    req = "SELECT options from {} where name={}".format(CFG("poll_table_name"), poll_name)
+    req = "SELECT options from {} where name = '{}'".format(CFG("poll_table_name"), poll_name)
     options_str = queryOne(c, req)
 
     if not options_str:
@@ -92,7 +95,7 @@ def getResults(poll_name):
     return results
 
 def insertOption(c, poll_name, option):
-    key = poll_name + option
+    key = poll_name + "-" + option
     count = 0
     params = (key, count)
     req = "INSERT INTO {} VALUES (?, ?)".format(CFG("options_table_name"))
@@ -110,7 +113,16 @@ def genTokens(c, poll_name, count=5):
         req = "INSERT INTO {} VALUES (?, ?, ?)".format(CFG("tokens_table_name"))
         c.execute(req, params)
 
+def checkPollExists(poll_name):
+    conn, c = connectDB()
+    req = "SELECT EXISTS( SELECT 1 FROM {} WHERE name='{}')".format(CFG("poll_table_name"), poll_name)
+    tmp = queryOne(c, req)
+    conn.close()
+    return tmp
+
 def createPoll(poll_name, options_arr, has_tokens, openresults=True):
+    if checkPollExists(poll_name):
+        raise RuntimeError("Cannot create poll, because the poll already exists.")
     conn, c = connectDB()
 
     # actual poll
@@ -138,6 +150,8 @@ def createPoll(poll_name, options_arr, has_tokens, openresults=True):
 def getOptions(poll_name):
     conn, c = connectDB()
     options_str = queryOne(c, "SELECT options FROM {} WHERE name='{}'".format(CFG("poll_table_name"), poll_name))
+    if options_str == None:
+        return None
     options = options_str.split(",")
     closeDB(conn)
     return options

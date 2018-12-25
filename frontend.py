@@ -47,15 +47,24 @@ def buildVoteInPoll(poll_name):
     script = readPartial("vote-js-partial.js")
     optionWrapper = "<span><input class='vote-option' type=checkbox id={}>{}</input></span>"
     options = db.getOptions(poll_name)
+    if poll_name == "" or poll_name == None:
+        return "<h1>No poll selected</h1>"
+    elif options == None:
+        return "<h1>Poll {} not found.</h1>".format(poll_name)
     voteOptions = ""
     for opt in options:
         voteOptions += optionWrapper.format(opt, opt)
-    body = readPartial("vote-partials").format(script=script, voteoptions=voteOptions)
+    body = readPartial("vote-partials").format(script=script, poll_name=poll_name, voteoptions=voteOptions)
     return readPartial("base").format(title="voting", body=body)
 
 
-def buildPostVote(poll_name):
-    pass
+def buildPostVote(poll_name, token, selectedOptions):
+    try:
+        db.vote(poll_name, selectedOptions, token)
+    except PermissionError:
+        return "<h1>Vote failed, token invalid</h1>"
+    body = "<h1>Vote Done {}<h1>".format(poll_name)
+    return readPartial("base").format(title=poll_name, body=body)
 
 def buildShowResults(poll_name):
     pass
