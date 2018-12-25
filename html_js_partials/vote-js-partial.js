@@ -1,5 +1,5 @@
 function cancle(){
-	window.location.replace(window.location.origin);
+	window.location.href = window.location.origin;
 }
 
 function submitt(){
@@ -15,7 +15,7 @@ function submitt(){
 			optString += options[x].id
 		}
 	}
-	window.location.replace(window.location.origin + "/post-vote" + "?" + "name=" + pollname
+	window.location.href = window.location.origin + "/post-vote" + "?" + "name=" + pollname
                                     + "&" + "token=" + token
-                                    + "&" + "selected=" + optString)
+                                    + "&" + "selected=" + optString
 }
