@@ -66,7 +66,10 @@ def buildShowResults(poll_name):
     results = resultWrapper.format(name="Answer", width="100%", ratio="Percentage", absolute="#votes") + "<hr>"
     
     for r in resultsDict.keys():
-        ratio = resultsDict[r]/total*100
+        try:
+            ratio = resultsDict[r]/total*100
+        except ZeroDevisionError:
+            ratio = 0
         ratioString = "{:.1f}%".format(ratio)
         width = "{:.2f}%".format(ratio)
         count = resultsDict[r]

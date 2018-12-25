@@ -16,3 +16,4 @@ functionality:
     single-answer   [ ]
     token-check     [ ]
     hidden-results  [ ]
+    ip-limit        [ ]
