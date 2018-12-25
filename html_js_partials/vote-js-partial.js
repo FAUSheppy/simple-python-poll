@@ -4,8 +4,14 @@ function cancle(){
 
 function submitt(){
 	options  = document.getElementsByClassName("vote-option")
-    token    = document.getElementById("token-field").value
-    pollname = document.getElementById("poll-name").innerText
+    token    = document.getElementById("token-field")
+    if(token){
+        token = token.value
+    }else{
+        token = "none"
+    }
+    var url = new URL(window.location.href)
+    pollname = url.searchParams.get("name")
 	optString = ""
 	for(x in options){
 		if(options[x].checked){
