@@ -63,13 +63,15 @@ def buildPostVote(poll_name, token, selectedOptions):
 def buildShowResults(poll_name):
     resultsDict, total = db.getResults(poll_name)
     resultWrapper = readPartial("result-wrapper-partial")
-    results = ""
+    results = resultWrapper.format(name="Answer", width="100%", ratio="Percentage", absolute="#votes") + "<hr>"
     
     for r in resultsDict.keys():
-        ratio = resultsDict[r]/total
+        ratio = resultsDict[r]/total*100
+        ratioString = "{:.1f}%".format(ratio)
+        width = "{:.2f}%".format(ratio)
         count = resultsDict[r]
         name  = r
-        results += resultWrapper.format(name=name, ratio=ratio, absolute=count)
+        results += resultWrapper.format(name=name, width=width, ratio=ratioString, absolute=count)
 
     body = readPartial("results-partial").format(poll_name=poll_name, question=db.queryQuestion(poll_name),\
                     voteoptions_results=results)

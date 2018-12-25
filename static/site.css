@@ -1,8 +1,26 @@
+/* general */
 body{
     background: #323232;
 }
-.vote-options{
 
+button{
+    background-color: red;
+    border-color: red;
+    color: #d0b9b9;
+    font-size: 20;
+    font-weight: bold;
+}
+
+hr{
+    margin-top: 20px;
+    border-color: black;
+}
+
+span{
+    margin-top: 10px;
+    width: 100%;
+    display: inline-block;
+    font-size: 20;
 }
 
 .poll-name-small{
@@ -32,7 +50,11 @@ body{
 }
 
 .main-title{
+    /* unused */
+}
 
+.button-container {
+    margin-top: 40px;
 }
 
 .options-container{
@@ -42,6 +64,7 @@ body{
     overflow-y: overlay;
 }
 
+/* vote page */
 .vote input{
 	float: right;
 	height: 25px;
@@ -49,32 +72,38 @@ body{
   	background-color: blue;
 }
 
-button{
-    background-color: red;
-    border-color: red;
-    color: #d0b9b9;
-    font-size: 20;
-    font-weight: bold;
-}
-
-hr{
-    margin-top: 20px;
-    border-color: black;
-}
-
-span{
-    margin-top: 10px;
-    width: 100%;
-    display: inline-block;
-    font-size: 20;
-}
-
+/* post-vote */
 .link-field{
     margin-top: 20px;
     text-align: center;
     width: 100%;
 }
 
-.button-container {
-    margin-top: 40px;
+/* result page */
+.results-container{
+    text-align: left;
+    display: inline-block;
+    width: 100%;
+    align-items: center;
+    margin-bottom: 40px;
+}
+.single-result-name{
+    float: left;
+    width: 20%;
+}
+
+.single-result-ratio{
+    float: left;
+    margin-left: 20px;
+    width: 60%;
+}
+
+.percentage-bar{
+    background: rgba(255,25,0,0.5);
+    padding-left: 10px;
+}
+
+.single-result-abs{
+    float: right;
+    width: 10%;
 }
