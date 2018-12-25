@@ -22,6 +22,7 @@
 
 from cpwrap import CFG
 import database as db
+from flask import request
 import os.path
 
 HTML_DIR = "html_js_partials/"
@@ -41,7 +42,8 @@ def buildCreatePoll(poll_name):
     return readPartial("base").format(title="poll-create", body=body)
 
 def buildPostCreatePoll(poll_name, tokens):
-    body = readPartial("post-create-partial").format(poll_name)
+    href = request.base_url + "/vote?name=" + poll_name
+    body = readPartial("post-create-partial").format(poll_name=poll_name, linkToVote=href)
     return readPartial("base").format(title=poll_name, body=body)
 
 def buildVoteInPoll(poll_name):

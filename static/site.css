@@ -56,6 +56,12 @@ span{
     font-size: 20;
 }
 
+.link-field{
+    margin-top: 20px;
+    text-align: center;
+    width: 100%;
+}
+
 .button-container {
     margin-top: 40px;
 }
