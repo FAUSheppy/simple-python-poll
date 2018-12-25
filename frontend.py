@@ -1,25 +1,3 @@
-# main page
-#    center: new poll
-# create poll page:
-#    - options already added - delete button -
-#    - new option -
-#    - cancle --------------------- submitt --
-#    - use tokens [ ]
-# post create page:
-#    center: link to poll (copyable)
-# ask token page:
-#    center: enter token
-# poll page:
-#    - option 1 [ ]
-#    - option n [ ]
-#    - ok button ---- cancle button -
-# post poll page:
-#    - vote counted!
-#    - if openresults link to results page -
-# results-page
-#    - option 1 [count] percent
-#    - option n [count] percent
-
 from cpwrap import CFG
 import database as db
 from flask import request
@@ -42,7 +20,7 @@ def buildCreatePoll(poll_name):
     return readPartial("base").format(title="poll-create", body=body)
 
 def buildPostCreatePoll(poll_name, tokens):
-    href = request.base_url + "/vote?name=" + poll_name
+    href = request.url_root + "vote?name=" + poll_name
     body = readPartial("post-create-partial").format(poll_name=poll_name, linkToVote=href)
     return readPartial("base").format(title=poll_name, body=body)
 
@@ -54,10 +32,22 @@ def buildVoteInPoll(poll_name):
         return "<h1>No poll selected</h1>"
     elif options == None:
         return "<h1>Poll {} not found.</h1>".format(poll_name)
+
+    # tokens needed?
+    tokenInput = ""
+    if db.tokenNeededExternal(poll_name):
+        tokenInput = "<input type=text id=token-field>"
+
+    # get poll question
+    question = db.queryQuestion(poll_name)
+
+    # build options
     voteOptions = ""
     for opt in options:
         voteOptions += optionWrapper.format(opt, opt)
-    body = readPartial("vote-partials").format(script=script, poll_name=poll_name, voteoptions=voteOptions)
+
+    body = readPartial("vote-partials").format(script=script, question=question, \
+                    poll_name=poll_name, voteoptions=voteOptions, tokenInput=tokenInput)
     return readPartial("base").format(title="voting", body=body)
 
 

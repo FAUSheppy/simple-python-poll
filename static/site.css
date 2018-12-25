@@ -5,6 +5,11 @@ body{
 
 }
 
+.poll-name-small{
+    text-align: left;
+    font-size: 15;
+}
+
 .main-container{
     background: orange;
 

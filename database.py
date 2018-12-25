@@ -26,6 +26,19 @@ def queryOne(cursor, reqString):
     except IndexError:
         return None
 
+def queryQuestion(poll_name):
+    conn, c = connectDB()
+    req = "SELECT question from {} WHERE name = '{}'".format(CFG("poll_table_name"), poll_name)
+    tmp = queryOne(c, req)
+    conn.close()
+    return tmp
+
+def tokenNeededExternal(poll_name):
+    conn, c = connectDB()
+    tmp = checkTokenNeeded(c, poll_name)
+    conn.close()
+    return tmp
+
 def init():
     if os.path.isfile(CFG("dbname")):
         return
@@ -35,6 +48,7 @@ def init():
                     options text,\
                     has_tokens integer,\
                     show_results integer,\
+                    question text,\
                     date text)"\
                     )
     c.execute("CREATE TABLE {}(name_option text, count)".format(CFG("options_table_name")))
@@ -47,7 +61,8 @@ def checkTokenValid(cursor, token, poll_name):
     return answer and answer == poll_name
 
 def checkTokenNeeded(cursor, poll_name):
-    req = "SELECT has_tokens from {} where name='{}'".format(CFG("poll_table_name"),poll_name)
+    req = "SELECT has_tokens FROM {} WHERE name = '{}'".format(CFG("poll_table_name"), poll_name)
+    print(req)
     return queryOne(cursor, req) == "1";
 
 def incrementOption(cursor, poll_name, option):
@@ -120,7 +135,7 @@ def checkPollExists(poll_name):
     conn.close()
     return tmp
 
-def createPoll(poll_name, options_arr, has_tokens, openresults=True):
+def createPoll(poll_name, options_arr, question, has_tokens, openresults=True):
     if checkPollExists(poll_name):
         raise RuntimeError("Cannot create poll, because the poll already exists.")
     conn, c = connectDB()
@@ -131,8 +146,8 @@ def createPoll(poll_name, options_arr, has_tokens, openresults=True):
     has_tokens = str(int(has_tokens))
     show_results = str(int(openresults))
     date = "NONE"
-    params = (name, options, has_tokens, show_results, date) 
-    req = "INSERT INTO {} VALUES (?,?,?,?,?)".format(CFG("poll_table_name"))
+    params = (name, options, has_tokens, show_results, question, date) 
+    req = "INSERT INTO {} VALUES (?,?,?,?,?,?)".format(CFG("poll_table_name"))
     c.execute(req, params)
 
     # tokens if needed
