@@ -1,15 +1,61 @@
+body{
+    background: #323232;
+}
 .vote-options{
 
 }
 
 .main-container{
+    background: orange;
+
+    max-width: 500px;
+    min-width: 30%;
+
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10%;
+    padding: 40px;
+
+    display: block;
+    text-align: center;
+
+    border-radius: 25px;
+
+    font-size: 25;
+    font-weight: bold;
+    color: #68553d;
+}
+
+.main-title{
 
 }
 
 .options-container{
+    margin-bottom: 40px;
+    max-width: 100%;
+    overflow-y: overlay;
+}
 
+button{
+    background-color: red;
+    border-color: red;
+    color: #d0b9b9;
+    font-size: 20;
+    font-weight: bold;
+}
+
+hr{
+    margin-top: 20px;
+    border-color: black;
+}
+
+span{
+    margin-top: 10px;
+    width: 100%;
+    display: inline-block;
+    font-size: 20;
 }
 
 .button-container {
-
+    margin-top: 40px;
 }

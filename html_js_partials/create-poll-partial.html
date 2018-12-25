@@ -4,37 +4,58 @@
 	}
 
     function submitt(){
-		options = document.getElementsByClassName("option-input")
+		options = document.getElementsByClassName("option")
 		optString = ""
+        count = 0
 		for(x in options){
 			if(options[x].value){
 				if(x != 0){
 					optString += ","
 				}
 				optString += options[x].value
+                count++;
 			}
 		}
-		window.location.replace(window.location.origin + "/post-create?name=" + "%s" + "&options=" + optString
-                        + "&" + "tokens=0")
+
+        var question = document.getElementById("question-input").value
+        if(question == ""){
+            alert("Must ask a question!")
+            return
+        }else if(count <= 1){
+            alert("Must offer more than one option!")
+            return
+        }
+
+		window.location.href = window.location.origin + "/post-create?name=" + "%s"
+                        + "&options=" + optString
+                        + "&" + "tokens=0"
+                        + "&" + "q=" + question
 	}
 
     function extend(){
 		var span = document.createElement('span')
+        span.innerText = "Answer: "
 		var inputForm = document.createElement("input")
 		inputForm.setAttribute("type", "text")
 		inputForm.setAttribute("class", "option-input")
 		span.appendChild(inputForm)
-		document.getElementById("options-container").appendChild(span)
+		var element = document.getElementById("options-container")
+        element.appendChild(span)
     }
 </script>
-<div id="main-container">
-	<div id="options-container">
-		<span> <input type="text" class="option-input"> </span>
-		<span> <input type="text" class="option-input"> </span>
-		<span> <input type="text" class="option-input"> </span>
+<div id="main-container" class="main-container">
+    <div class="main-title">
+        Enter choices.
+    <div>
+	<div class="options-container" id="options-container">
+		<span> Question: <input id="question-input" type="text" class="option-input"> </span>
+        <hr>
+		<span> Answer: <input type="text" class="option-input option"> </span>
+		<span> Answer: <input type="text" class="option-input option"> </span>
+		<span> Answer: <input type="text" class="option-input option"> </span>
 	</div>
 	
-	<div id="button-container">
+	<div id="button-container" class="button-container">
 		<button onclick="extend()">+</button>
 		<button onclick="submitt()">Create</button>
 		<button onclick="cancle()">Cancle</button>

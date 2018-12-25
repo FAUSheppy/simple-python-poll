@@ -41,7 +41,8 @@ def buildCreatePoll(poll_name):
     return readPartial("base").format(title="poll-create", body=body)
 
 def buildPostCreatePoll(poll_name, tokens):
-    return "<h1>Poll Created!</h1>"
+    body = readPartial("post-create-partial").format(poll_name)
+    return readPartial("base").format(title=poll_name, body=body)
 
 def buildVoteInPoll(poll_name):
     script = readPartial("vote-js-partial.js")
@@ -62,8 +63,8 @@ def buildPostVote(poll_name, token, selectedOptions):
     try:
         db.vote(poll_name, selectedOptions, token)
     except PermissionError:
-        return "<h1>Vote failed, token invalid</h1>"
-    body = "<h1>Vote Done {}<h1>".format(poll_name)
+        return "<h1>Vote failed, token invalid.</h1>"
+    body = readPartial("post-vote-partial").format(poll_name)
     return readPartial("base").format(title=poll_name, body=body)
 
 def buildShowResults(poll_name):
