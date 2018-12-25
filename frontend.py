@@ -56,8 +56,21 @@ def buildPostVote(poll_name, token, selectedOptions):
         db.vote(poll_name, selectedOptions, token)
     except PermissionError:
         return "<h1>Vote failed, token invalid.</h1>"
-    body = readPartial("post-vote-partial").format(poll_name)
+    resultsHref = "'/results?name=%s'" % poll_name
+    body = readPartial("post-vote-partial").format(poll_name=poll_name, resultsHref=resultsHref)
     return readPartial("base").format(title=poll_name, body=body)
 
 def buildShowResults(poll_name):
-    pass
+    resultsDict, total = db.getResults(poll_name)
+    resultWrapper = readPartial("result-wrapper-partial")
+    results = ""
+    
+    for r in resultsDict.keys():
+        ratio = resultsDict[r]/total
+        count = resultsDict[r]
+        name  = r
+        results += resultWrapper.format(name=name, ratio=ratio, absolute=count)
+
+    body = readPartial("results-partial").format(poll_name=poll_name, question=db.queryQuestion(poll_name),\
+                    voteoptions_results=results)
+    return readPartial("base").format(title=poll_name, body=body)

@@ -4,11 +4,6 @@ from cpwrap import CFG
 import random
 import string
 
-# DB-structure:
-# db-poll:    name | options | tokens? | openresults? | date
-# db-options: name+option | count
-# db-tokens   token | name | used | option(s)
-
 def connectDB():
     conn = sqlite3.connect(CFG("dbname"))
     return (conn, conn.cursor())
@@ -51,7 +46,7 @@ def init():
                     question text,\
                     date text)"\
                     )
-    c.execute("CREATE TABLE {}(name_option text, count)".format(CFG("options_table_name")))
+    c.execute("CREATE TABLE {}(name_option text, count integer)".format(CFG("options_table_name")))
     c.execute("CREATE TABLE {}(token text, name text, options_selected text)".format(CFG("tokens_table_name")))
     closeDB(conn)
 
@@ -87,8 +82,12 @@ def vote(poll_name, options_string, token_used="DUMMY_INVALID_TOKEN"):
 
 def getOptionCount(c, poll_name, option):
     key = poll_name + "-" + option
-    req = "SELECT count WHERE name_option = '{}'".format(CFG("options_table_name"), key)
-    return queryOne(c, req)
+    req = "SELECT \"count\" FROM {table} WHERE \"name_option\" = '{key}'".format(
+                    table=CFG("options_table_name"),key=key)
+    count = queryOne(c, req)
+    if count == None:
+        raise AssertionError("Unknown answer for poll. WTF?")
+    return count;
 
 def getResults(poll_name):
     conn, c = connectDB()
@@ -102,12 +101,12 @@ def getResults(poll_name):
     options = options_str.split(",")
     results = dict()
     for opt in options:
-        count = getOptionCount()
-        total += count
-        ret.update({opt:count})
+        count = getOptionCount(c, poll_name, opt)
+        total += int(count)
+        results.update({opt:count})
 
     conn.close()
-    return results
+    return (results, total)
 
 def insertOption(c, poll_name, option):
     key = poll_name + "-" + option
