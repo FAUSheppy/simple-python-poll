@@ -1,6 +1,10 @@
 <script>
     function create(){
 		input = document.getElementById("input").value
+        if(input == ""){
+            alert("Must give a name for the poll!")
+            return
+        }
 		window.location.href = window.location.origin + "/create?name=" + input;
 	}
 </script> 
@@ -13,3 +17,10 @@
         <button onclick="create()">Go!</button>
     </div>
 <div>
+
+<!-- pre-select input field -->
+<script>
+    var input = document.getElementById('input')
+    input.focus();
+    input.select();
+</script>
