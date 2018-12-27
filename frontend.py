@@ -20,7 +20,12 @@ def buildCreatePoll(poll_name):
     return readPartial("base").format(title="poll-create", body=body)
 
 def buildPostCreatePoll(poll_name, tokens):
-    href = request.url_root + "vote?name=" + poll_name
+    hostname = request.url_root
+    reverseProxyHostname = request.headers.get('X-REAL-HOSTNAME')
+    if reverseProxyHostname:
+        hostname = reverseProxyHostname
+
+    href = reverseProxyHostname + "vote?name=" + poll_name
    
     tokenPartial = ""
     tokenWrapper = "<div class='single-token'>{}</div>"
