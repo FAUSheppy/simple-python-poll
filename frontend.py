@@ -62,7 +62,12 @@ def buildPostVote(poll_name, token, selectedOptions):
     try:
         db.vote(poll_name, selectedOptions, token)
     except PermissionError:
-        return "<h1>Vote failed, token invalid.</h1>"
+        return readPartial("base").format(title="Vote Failed", \
+                        body='''
+                        <div class='main-container'>
+                            <h1>Vote failed<h1>Token invalid, cancled or already used.</h1> :(
+                        </div>
+                        ''')
     resultsHref = "'/results?name=%s'" % poll_name
     body = readPartial("post-vote-partial").format(poll_name=poll_name, resultsHref=resultsHref)
     return readPartial("base").format(title=poll_name, body=body)

@@ -43,6 +43,14 @@ def tokenNeededExternal(poll_name):
     conn.close()
     return tmp
 
+def markTokenUsedExternal(poll_name, optStr=""):
+    conn, c = connectDB()
+    req = "UPDATE {} SET \"options_selected\"='{}' WHERE name = '{}'".format(CFG("tokens_table_name"), \
+                    optStr, poll_name)
+    print(req)
+    c.execute(req)
+    closeDB(conn)
+
 def init():
     if os.path.isfile(CFG("dbname")):
         return
@@ -60,13 +68,13 @@ def init():
     closeDB(conn)
 
 def checkTokenValid(cursor, token, poll_name):
-    req = "SELECT name from {} where token='{}'".format(CFG("tokens_table_name"),token)
-    answer = queryOne(cursor, req)
-    return answer and answer == poll_name
+    req = "SELECT name, options_selected from {} where token='{}'".format(CFG("tokens_table_name"), token)
+    answer = queryAll(cursor, req)
+    return answer and answer[0] == poll_name and answer[1] == 'NONE'
 
 def checkTokenNeeded(cursor, poll_name):
     req = "SELECT has_tokens FROM {} WHERE name = '{}'".format(CFG("poll_table_name"), poll_name)
-    return queryOne(cursor, req) == "1";
+    return queryOne(cursor, req) == 1;
 
 def incrementOption(cursor, poll_name, option):
     key = poll_name+"-"+option
@@ -75,8 +83,10 @@ def incrementOption(cursor, poll_name, option):
 
 def vote(poll_name, options_string, token_used="DUMMY_INVALID_TOKEN"):
     conn, c = connectDB()
+
     # check token
     token_valid = checkTokenValid(c, token_used, poll_name)
+    markTokenUsedExternal(poll_name, options_string)
     if not token_valid and checkTokenNeeded(c, poll_name):
         raise PermissionError("Poll requires valid token.")
 
