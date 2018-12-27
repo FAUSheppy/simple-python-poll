@@ -1,10 +1,13 @@
 <div class="main-container" id="main-container">
     <div class="main-title" >Successfully created '{poll_name}' sucessfully created!</div>
+    <div class=token-container>
+        {tokens}
+    </div>
+    <div style="margin-top: 40px">
+        <hr>
+        Vote-Link: <input class="link-field" type=text value={linkToVote}></input>
+    </div>
 	<div class="button-container" id="button-container">
             <button onClick="window.location.href = window.location.origin">Main Page</button>
 	</div>
-    <div style="margin-top: 40px">
-        <hr>
-        Link: <input class="link-field" type=text value={linkToVote}></input>
-    </div>
 </div>

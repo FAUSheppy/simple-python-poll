@@ -12,6 +12,15 @@ def closeDB(conn, cursor=None):
     conn.commit()
     conn.close()
 
+def queryAll(cursor, reqString):
+    try:
+        cursor.execute(reqString)
+        ret = cursor.fetchone()
+        if ret:
+            return ret
+    except IndexError:
+        return []
+
 def queryOne(cursor, reqString):
     try:
         cursor.execute(reqString)
@@ -57,13 +66,11 @@ def checkTokenValid(cursor, token, poll_name):
 
 def checkTokenNeeded(cursor, poll_name):
     req = "SELECT has_tokens FROM {} WHERE name = '{}'".format(CFG("poll_table_name"), poll_name)
-    print(req)
     return queryOne(cursor, req) == "1";
 
 def incrementOption(cursor, poll_name, option):
     key = poll_name+"-"+option
     req = "UPDATE {} SET count=count+1 WHERE name_option = '{}';".format(CFG("options_table_name"), key)
-    print(req)
     cursor.execute(req)
 
 def vote(poll_name, options_string, token_used="DUMMY_INVALID_TOKEN"):
@@ -115,6 +122,14 @@ def insertOption(c, poll_name, option):
     req = "INSERT INTO {} VALUES (?, ?)".format(CFG("options_table_name"))
     c.execute(req, params)
 
+def getTokensExternal(poll_name):
+    req = "SELECT token FROM {} WHERE name = '{}'".format(CFG("token_table_name"), poll_name)
+    conn, c = connectDB()
+    tmp = queryAll(req)
+    conn.close()
+    return tmp
+
+
 def genSingleToken(length=5):
     return ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(length))
 
@@ -126,6 +141,7 @@ def genTokens(c, poll_name, count=5):
         params = (token, name, options_selected)
         req = "INSERT INTO {} VALUES (?, ?, ?)".format(CFG("tokens_table_name"))
         c.execute(req, params)
+    return tokens
 
 def checkPollExists(poll_name):
     conn, c = connectDB()
@@ -150,7 +166,7 @@ def createPoll(poll_name, options_arr, question, has_tokens, openresults=True):
     c.execute(req, params)
 
     # tokens if needed
-    tokens = ""
+    tokens = []
     if has_tokens:
         tokens = genTokens(c, poll_name)
 

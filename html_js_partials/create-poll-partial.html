@@ -17,18 +17,28 @@
 			}
 		}
 
-        var question = document.getElementById("question-input").value
+        var question    = document.getElementById("question-input").value
+        var pollName    = document.getElementById("poll-name-input").value
+        var tokenNeeded = document.getElementById("token-needed-input").checked
         if(question == ""){
             alert("Must ask a question!")
             return
         }else if(count <= 1){
             alert("Must offer more than one option!")
             return
+        }else if(pollName == ""){
+            alert("Must have a poll-name!")
+            return
+        }
+        
+        var token = 0
+        if(tokenNeeded){
+            token = 1
         }
 
-		window.location.href = window.location.origin + "/post-create?name=" + "%s"
+		window.location.href = window.location.origin + "/post-create?name=" + pollName
                         + "&options=" + optString
-                        + "&" + "tokens=0"
+                        + "&" + "tokens=" + token 
                         + "&" + "q=" + question
 	}
 
@@ -48,11 +58,18 @@
         Enter choices.
     <div>
 	<div class="options-container" id="options-container">
-		<span> Question: <input id="question-input" type="text" class="option-input"> </span>
+		<span> Pollname: <input id="poll-name-input" type="text" class="option-input"> </span>
+		<span> Question:  <input id="question-input"  type="text" class="option-input"> </span>
         <hr>
 		<span> Answer: <input type="text" class="option-input option"> </span>
 		<span> Answer: <input type="text" class="option-input option"> </span>
 		<span> Answer: <input type="text" class="option-input option"> </span>
+	</div>
+
+	<div id="button-container" class="button-container">
+        <span> Use Tokens? &nbsp;&nbsp;&nbsp; 
+                <input class="vote-option" type=checkbox id="token-needed-input">
+        </span>
 	</div>
 	
 	<div id="button-container" class="button-container">
@@ -61,3 +78,18 @@
 		<button onclick="cancle()">Cancle</button>
 	</div>
 </div>
+<script>
+    var url = new URL(window.location.href)
+    var pollNameInput = document.getElementById('poll-name-input')
+    var question = document.getElementById('question-input')
+    var pollname = url.searchParams.get("name")
+
+    if(pollname == "" || pollname == null){
+        pollNameInput.focus();
+        pollNameInput.select();
+    }else{
+        pollNameInput.value = pollname
+        question.focus();
+        question.select();
+    }
+</script>

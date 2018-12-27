@@ -17,9 +17,10 @@ hr{
 }
 
 span{
-    margin-top: 10px;
+    margin-top: 5px;
     width: 100%;
     display: inline-block;
+	line-height: 40px; /* 75% of height */
     font-size: 20;
 }
 
@@ -49,8 +50,22 @@ span{
     color: #68553d;
 }
 
+input[type="checkbox"]{
+	width: 40px; /*Desired width*/
+	height: 40px; /*Desired height*/
+
+	background: grey;
+	border-radius: 10px;	
+	
+	cursor: pointer;
+}
+
 .main-title{
     /* unused */
+}
+
+.single-token{
+    
 }
 
 .button-container {
@@ -68,7 +83,6 @@ span{
 .vote input{
 	float: right;
 	height: 25px;
-  	width: 25px;
   	background-color: blue;
 }
 

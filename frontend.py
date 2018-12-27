@@ -16,12 +16,19 @@ def buildStartPage():
     return readPartial("base").format(title="simple-poll", body=readPartial("start-page"))
 
 def buildCreatePoll(poll_name):
-    body = readPartial("create-poll-partial") % poll_name
+    body = readPartial("create-poll-partial")
     return readPartial("base").format(title="poll-create", body=body)
 
 def buildPostCreatePoll(poll_name, tokens):
     href = request.url_root + "vote?name=" + poll_name
-    body = readPartial("post-create-partial").format(poll_name=poll_name, linkToVote=href)
+   
+    tokenPartial = ""
+    tokenWrapper = "<div class='single-token'>{}</div>"
+    if tokens:
+        for tk in tokens:
+            tokenPartial += tokenWrapper.format(tk)
+
+    body = readPartial("post-create-partial").format(tokens=tokenPartial, poll_name=poll_name, linkToVote=href)
     return readPartial("base").format(title=poll_name, body=body)
 
 def buildVoteInPoll(poll_name):
