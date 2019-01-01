@@ -1,6 +1,6 @@
 code:
     render <-> format [ ]
-    sql-escapring     [ ]
+    sql-escaping      [ ]
 
 database:
     record-vote     [x]
@@ -17,7 +17,7 @@ frontend:
     postcreate-page [x]
 
 core-functionality:
-    single-answer   [ ]
+    single-answer   [x]
     token-check     [x]
     generate-tokens [x]
 
