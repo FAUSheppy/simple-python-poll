@@ -65,12 +65,18 @@ def init():
                     )
     c.execute("CREATE TABLE {}(name_option text, count integer)".format(CFG("options_table_name")))
     c.execute("CREATE TABLE {}(token text, name text, options_selected text)".format(CFG("tokens_table_name")))
+    c.execute("CREATE TABLE {}(adm_token text, poll_name text)".format(CFG("admintoken_table_name")))
     closeDB(conn)
 
 def checkTokenValid(cursor, token, poll_name):
     req = "SELECT name, options_selected from {} where token='{}'".format(CFG("tokens_table_name"), token)
     answer = queryAll(cursor, req)
     return answer and answer[0] == poll_name and answer[1] == 'NONE'
+
+def checkAdmTokenValid(cursor, adm_token, poll_name):
+    req = "SELECT poll_name from {} where adm_token = {}".format(CFG("admintoken_table_name"), adm_token)
+    answer = queryOne(cursor, req)
+    return answer == poll_name
 
 def checkTokenNeeded(cursor, poll_name):
     req = "SELECT has_tokens FROM {} WHERE name = '{}'".format(CFG("poll_table_name"), poll_name)
