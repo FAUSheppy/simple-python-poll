@@ -19,21 +19,29 @@ def buildCreatePoll(poll_name):
     body = readPartial("create-poll-partial")
     return readPartial("base").format(title="poll-create", body=body)
 
+def buildTokenPartial(tokens):
+    tokenPartial = ""
+    tokenWrapper = "<div class='single-token'>{}</div>"
+    if tokens:
+        for tk in tokens:
+            tk = tk[0]
+            tokenPartial += tokenWrapper.format(tk)
+    return tokenPartial
+
 def buildPostCreatePoll(poll_name, tokens):
     hostname = request.url_root
     reverseProxyHostname = request.headers.get('X-REAL-HOSTNAME')
     if reverseProxyHostname:
         hostname = reverseProxyHostname
 
-    href = reverseProxyHostname + "vote?name=" + poll_name
-   
-    tokenPartial = ""
-    tokenWrapper = "<div class='single-token'>{}</div>"
-    if tokens:
-        for tk in tokens:
-            tokenPartial += tokenWrapper.format(tk)
+    hrefVote =    hostname + "vote?name="    + poll_name
+    hrefResults = hostname + "results?name=" + poll_name
+    hrefTokens =  hostname + "tokens?name="  + poll_name
 
-    body = readPartial("post-create-partial").format(tokens=tokenPartial, poll_name=poll_name, linkToVote=href)
+    tokenPartial = buildTokenPartial(tokens)
+   
+    body = readPartial("post-create-partial").format(tokens=tokenPartial, poll_name=poll_name, \
+                            linkToVote=hrefVote, linkToResults=hrefResults, linkToTokens=hrefTokens)
     return readPartial("base").format(title=poll_name, body=body)
 
 def buildVoteInPoll(poll_name):
@@ -76,6 +84,28 @@ def buildPostVote(poll_name, token, selectedOptions):
     resultsHref = "'/results?name=%s'" % poll_name
     body = readPartial("post-vote-partial").format(poll_name=poll_name, resultsHref=resultsHref)
     return readPartial("base").format(title=poll_name, body=body)
+
+def buildTokenQuery(poll_name, admToken):
+    if db.tokenNeededExternal(poll_name):
+        return readPartial("base").format(title="AdminVerifyFailed", \
+                        body='''
+                        <div class='main-container'>
+                            <h1>Poll does not use tokens.</h1>
+                        </div>
+                        ''')
+    elif not db.checkAdmTokenValid(poll_name, admToken) and False:
+        return readPartial("base").format(title="AdminVerifyFailed", \
+                        body='''
+                        <div class='main-container'>
+                            <h1>Admin-Token invalid</h1>
+                        </div>
+                        ''')
+    else:
+        pass
+        tokens = db.getTokensExternal(poll_name)
+        tokenPartial = buildTokenPartial(tokens)
+        body = readPartial("token-query-partial").format(poll_name=poll_name, tokens=tokenPartial)
+        return readPartial("base").format(title=poll_name, body=body)
 
 def buildShowResults(poll_name):
     resultsDict, total = db.getResults(poll_name)

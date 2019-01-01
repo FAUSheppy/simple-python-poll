@@ -20,6 +20,8 @@
         var question    = document.getElementById("question-input").value
         var pollName    = document.getElementById("poll-name-input").value
         var tokenNeeded = document.getElementById("token-needed-input").checked
+        var multiChoice = document.getElementById("multi-possible-input").checked
+
         if(question == ""){
             alert("Must ask a question!")
             return
@@ -36,9 +38,15 @@
             token = 1
         }
 
+        var multiChoiceVar = 0
+        if(multiChoice){
+            multiChoice = 1
+        }
+
 		window.location.href = window.location.origin + "/post-create?name=" + pollName
                         + "&options=" + optString
                         + "&" + "tokens=" + token 
+                        + "&" + "multi=" + multiChoiceVar
                         + "&" + "q=" + question
 	}
 
@@ -65,10 +73,13 @@
 		<span> Answer: <input type="text" class="option-input option"> </span>
 		<span> Answer: <input type="text" class="option-input option"> </span>
 	</div>
-
+    <hr>
 	<div id="button-container" class="button-container">
-        <span> Use Tokens? &nbsp;&nbsp;&nbsp; 
+        <span> Use Tokens? &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
                 <input class="vote-option" type=checkbox id="token-needed-input">
+        </span>
+        <span> Multiple Choice? &nbsp;&nbsp;&nbsp; 
+                <input class="vote-option" type=checkbox id="multi-possible-input">
         </span>
 	</div>
 	

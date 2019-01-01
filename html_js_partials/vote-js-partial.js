@@ -1,5 +1,5 @@
 function cancle(){
-	window.location.href = window.location.origin;
+	window.location.href = window.location.origin
 }
 
 function submitt(){
@@ -24,4 +24,10 @@ function submitt(){
 	window.location.href = window.location.origin + "/post-vote" + "?" + "name=" + pollname
                                     + "&" + "token=" + token
                                     + "&" + "selected=" + optString
+}
+
+function showResults(){
+    var url = new URL(window.location.href)
+    pollname = url.searchParams.get("name")
+    window.location.href = window.location.origin + "/results" + "?name=" + pollname 
 }

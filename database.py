@@ -15,7 +15,7 @@ def closeDB(conn, cursor=None):
 def queryAll(cursor, reqString):
     try:
         cursor.execute(reqString)
-        ret = cursor.fetchone()
+        ret = cursor.fetchall()
         if ret:
             return ret
     except IndexError:
@@ -47,7 +47,6 @@ def markTokenUsedExternal(poll_name, optStr=""):
     conn, c = connectDB()
     req = "UPDATE {} SET \"options_selected\"='{}' WHERE name = '{}'".format(CFG("tokens_table_name"), \
                     optStr, poll_name)
-    print(req)
     c.execute(req)
     closeDB(conn)
 
@@ -73,9 +72,11 @@ def checkTokenValid(cursor, token, poll_name):
     answer = queryAll(cursor, req)
     return answer and answer[0] == poll_name and answer[1] == 'NONE'
 
-def checkAdmTokenValid(cursor, adm_token, poll_name):
-    req = "SELECT poll_name from {} where adm_token = {}".format(CFG("admintoken_table_name"), adm_token)
-    answer = queryOne(cursor, req)
+def checkAdmTokenValid(poll_name, adm_token):
+    conn, c = connectDB()
+    req = "SELECT poll_name from {} where adm_token = \"{}\"".format(CFG("admintoken_table_name"), adm_token)
+    answer = queryOne(c, req)
+    closeDB(conn)
     return answer == poll_name
 
 def checkTokenNeeded(cursor, poll_name):
@@ -139,9 +140,9 @@ def insertOption(c, poll_name, option):
     c.execute(req, params)
 
 def getTokensExternal(poll_name):
-    req = "SELECT token FROM {} WHERE name = '{}'".format(CFG("token_table_name"), poll_name)
+    req = "SELECT token FROM {} WHERE name='{}'".format(CFG("tokens_table_name"), poll_name)
     conn, c = connectDB()
-    tmp = queryAll(req)
+    tmp = queryAll(c, req)
     conn.close()
     return tmp
 

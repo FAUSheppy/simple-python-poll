@@ -33,6 +33,10 @@ def postCreatePoll():
     tokens = db.createPoll(getPollName(), arg("options").split(","), question, useTokens)
     return frontend.buildPostCreatePoll(getPollName(), tokens)
 
+@app.route('/polladmin')
+def tokenQuery():
+    return frontend.buildTokenQuery(getPollName(), arg("admtoken"))
+
 @app.route('/vote')
 def voteInPoll():
     return frontend.buildVoteInPoll(getPollName())
