@@ -21,5 +21,6 @@ core-functionality:
     generate-tokens [x]
 
 maybe:
-    hidden-results  [ ]
-    ip-limit        [ ]
+    hidden-results   [ ]
+    ip-limit         [ ]
+    tokens-used-view [ ]
