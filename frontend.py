@@ -24,7 +24,8 @@ def buildTokenPartial(tokens):
     tokenWrapper = "<div class='single-token'>{}</div>"
     if tokens:
         for tk in tokens:
-            tk = tk[0]
+            if type(tk) == tuple:
+                tk = tk[0]
             tokenPartial += tokenWrapper.format(tk)
     return tokenPartial
 
@@ -34,9 +35,9 @@ def buildPostCreatePoll(poll_name, tokens):
     if reverseProxyHostname:
         hostname = reverseProxyHostname
 
-    hrefVote =    hostname + "vote?name="    + poll_name
-    hrefResults = hostname + "results?name=" + poll_name
-    hrefTokens =  hostname + "tokens?name="  + poll_name
+    hrefVote =    hostname + "vote?name="       + poll_name
+    hrefResults = hostname + "results?name="    + poll_name
+    hrefTokens =  hostname + "polladmin?name="  + poll_name
 
     tokenPartial = buildTokenPartial(tokens)
    
@@ -85,8 +86,8 @@ def buildPostVote(poll_name, token, selectedOptions):
     body = readPartial("post-vote-partial").format(poll_name=poll_name, resultsHref=resultsHref)
     return readPartial("base").format(title=poll_name, body=body)
 
-def buildTokenQuery(poll_name, admToken):
-    if db.tokenNeededExternal(poll_name):
+def buildTokenQuery(poll_name, admToken, newTokens=0):
+    if not db.tokenNeededExternal(poll_name):
         return readPartial("base").format(title="AdminVerifyFailed", \
                         body='''
                         <div class='main-container'>
@@ -103,6 +104,11 @@ def buildTokenQuery(poll_name, admToken):
     else:
         pass
         tokens = db.getTokensExternal(poll_name)
+        if len(tokens) < newTokens:
+            db.genTokensExternal(poll_name, newTokens - len(tokens))
+            href = "/polladmin?name=%s&admtoken=%s" % (poll_name,admToken)
+            redirect = '<meta http-equiv="refresh" content="0"; url="{}">'.format(href)
+            return "<html>{}</html>".format(redirect)
         tokenPartial = buildTokenPartial(tokens)
         body = readPartial("token-query-partial").format(poll_name=poll_name, tokens=tokenPartial)
         return readPartial("base").format(title=poll_name, body=body)

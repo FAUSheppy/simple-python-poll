@@ -1,3 +1,6 @@
+code:
+    render <-> format [ ]
+
 database:
     record-vote     [x]
     create-poll     [x]
@@ -15,7 +18,7 @@ frontend:
 core-functionality:
     single-answer   [ ]
     token-check     [x]
-    generate-tokens [ ]
+    generate-tokens [x]
 
 maybe:
     hidden-results  [ ]

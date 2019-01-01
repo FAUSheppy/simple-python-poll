@@ -9,3 +9,5 @@ poll_table_name         = polls
 options_table_name      = options
 tokens_table_name       = tokens
 admintoken_table_name   = admtokens
+
+default_token_count = 10

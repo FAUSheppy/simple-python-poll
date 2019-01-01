@@ -35,7 +35,14 @@ def postCreatePoll():
 
 @app.route('/polladmin')
 def tokenQuery():
-    return frontend.buildTokenQuery(getPollName(), arg("admtoken"))
+    newTokens = 0
+    try:
+        newTokens = int(arg("generate"))
+        if newTokens > 50:
+            newTokens = 50
+    except (ValueError, TypeError):
+        newTokens = 0
+    return frontend.buildTokenQuery(getPollName(), arg("admtoken"), newTokens=newTokens)
 
 @app.route('/vote')
 def voteInPoll():

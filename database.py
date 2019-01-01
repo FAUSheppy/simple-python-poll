@@ -146,12 +146,15 @@ def getTokensExternal(poll_name):
     conn.close()
     return tmp
 
-
 def genSingleToken(length=5):
     return ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(length))
 
-def genTokens(c, poll_name, count=5):
-    tokens = [ genSingleToken() for x in range(0,5) ]
+def genTokens(c, poll_name, count=False):
+    if not count:
+        count = CFG("default_token_count")
+
+    tokens = [ genSingleToken() for x in range(0,count) ]
+    print(tokens)
     for token in tokens:
         name = poll_name 
         options_selected = "NONE"
@@ -159,6 +162,12 @@ def genTokens(c, poll_name, count=5):
         req = "INSERT INTO {} VALUES (?, ?, ?)".format(CFG("tokens_table_name"))
         c.execute(req, params)
     return tokens
+
+def genTokensExternal(poll_name, count=False):
+    conn, c = connectDB()
+    tok = genTokens(c, poll_name, count)
+    closeDB(conn)
+    return tok
 
 def checkPollExists(poll_name):
     conn, c = connectDB()
