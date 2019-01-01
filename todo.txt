@@ -2,7 +2,7 @@ database:
     record-vote     [x]
     create-poll     [x]
     query-results   [x]
-    query-tokens    [ ]
+    query-tokens    [x]
 
 frontend:
     main-page       [x]
@@ -12,8 +12,11 @@ frontend:
     post-vote-page  [x]
     postcreate-page [x]
 
-functionality:
+core-functionality:
     single-answer   [ ]
-    token-check     [ ]
+    token-check     [x]
+    generate-tokens [ ]
+
+maybe:
     hidden-results  [ ]
     ip-limit        [ ]
