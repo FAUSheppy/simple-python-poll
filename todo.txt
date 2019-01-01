@@ -1,5 +1,6 @@
 code:
     render <-> format [ ]
+    sql-escapring     [ ]
 
 database:
     record-vote     [x]

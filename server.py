@@ -34,7 +34,9 @@ def postCreatePoll():
     return frontend.buildPostCreatePoll(getPollName(), tokens)
 
 @app.route('/polladmin')
-def tokenQuery():
+def tokenQuery(preToken=""):
+
+    # generate new tokens if needed
     newTokens = 0
     try:
         newTokens = int(arg("generate"))
@@ -42,11 +44,26 @@ def tokenQuery():
             newTokens = 50
     except (ValueError, TypeError):
         newTokens = 0
-    return frontend.buildTokenQuery(getPollName(), arg("admtoken"), newTokens=newTokens)
+   
+    name = getPollName()
+    if preToken:
+        token = preToken
+        name  = db.pollNameFromToken(preToken)
+    else:
+        token = arg("admtoken")
+ 
+    return frontend.buildTokenQuery(name, token, newTokens=newTokens)
 
 @app.route('/vote')
-def voteInPoll():
-    return frontend.buildVoteInPoll(getPollName())
+def voteInPoll(poll_name=None, preToken=""):
+    if poll_name:
+        ret = frontend.buildVoteInPoll(poll_name, preToken)
+    else:
+        poll_name = getPollName()
+        if not poll_name and preToken:
+            poll_name = db.pollNameFromToken(preToken)
+        ret = frontend.buildVoteInPoll(poll_name, preToken)
+    return ret
 
 @app.route('/post-vote')
 def postVote():
@@ -55,6 +72,20 @@ def postVote():
 @app.route('/results')
 def showResults():
     return frontend.buildShowResults(getPollName())
+
+@app.route('/poll')
+def multiplex():
+    ident = arg("ident")
+    if not ident:
+        raise ValueError("no ident given")
+    elif db.checkPollExists(ident):
+        return voteInPoll(poll_name=ident)
+    elif db.isValidAdmToken(ident):
+        return tokenQuery(preToken=ident)
+    elif db.isValidToken(ident):
+        return voteInPoll(preToken=ident)
+    else:
+        return voteInPoll(poll_name=ident)
 
 @app.route('/site.css')
 def css():

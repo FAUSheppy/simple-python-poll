@@ -79,6 +79,31 @@ def checkAdmTokenValid(poll_name, adm_token):
     closeDB(conn)
     return answer == poll_name
 
+def isValidAdmToken(adm_token):
+    conn, c = connectDB()
+    req = "SELECT *  from {} where adm_token='{}'".format(CFG("admintoken_table_name"), adm_token)
+    answer = bool(queryOne(c, req))
+    closeDB(conn)
+    return answer
+
+def isValidToken(token):
+    conn, c = connectDB()
+    req = "SELECT * from {} where token='{}'".format(CFG("tokens_table_name"), token)
+    answer = bool(queryOne(c, req))
+    closeDB(conn)
+    return answer
+
+def pollNameFromToken(token):
+    conn, c = connectDB()
+    req = "SELECT name from {} where token='{}'".format(CFG("tokens_table_name"), token)
+    answer = queryOne(c, req)
+    if not answer:
+        req = "SELECT poll_name from {} where adm_token='{}'".format(CFG("admintoken_table_name"), token)
+        answer = queryOne(c, req)
+    closeDB(conn)
+    return answer
+
+
 def checkTokenNeeded(cursor, poll_name):
     req = "SELECT has_tokens FROM {} WHERE name = '{}'".format(CFG("poll_table_name"), poll_name)
     return queryOne(cursor, req) == 1;
@@ -169,6 +194,19 @@ def genTokensExternal(poll_name, count=False):
     closeDB(conn)
     return tok
 
+def createAdminToken(c, poll_name):
+    adm_token = genSingleToken()
+    params = (adm_token, poll_name)
+    req = "INSERT INTO {} VALUES (?, ?)".format(CFG("admintoken_table_name"))
+    c.execute(req, params)
+
+def getAdmToken(poll_name):
+    conn, c = connectDB()
+    req = "SELECT adm_token FROM {} WHERE poll_name='{}'".format(CFG("admintoken_table_name"), poll_name)
+    admtok = queryOne(c, req)
+    closeDB(conn)
+    return admtok
+
 def checkPollExists(poll_name):
     conn, c = connectDB()
     req = "SELECT EXISTS( SELECT 1 FROM {} WHERE name='{}')".format(CFG("poll_table_name"), poll_name)
@@ -195,6 +233,9 @@ def createPoll(poll_name, options_arr, question, has_tokens, openresults=True):
     tokens = []
     if has_tokens:
         tokens = genTokens(c, poll_name)
+
+    # adminAccessToken
+    createAdminToken(c, poll_name)
 
     # update options
     for opt in options_arr:

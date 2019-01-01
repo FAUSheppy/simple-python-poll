@@ -37,15 +37,16 @@ def buildPostCreatePoll(poll_name, tokens):
 
     hrefVote =    hostname + "vote?name="       + poll_name
     hrefResults = hostname + "results?name="    + poll_name
-    hrefTokens =  hostname + "polladmin?name="  + poll_name
+    hrefTokens =  hostname + "polladmin?name="  + poll_name + "&admtoken=" + db.getAdmToken(poll_name)
 
     tokenPartial = buildTokenPartial(tokens)
    
     body = readPartial("post-create-partial").format(tokens=tokenPartial, poll_name=poll_name, \
-                            linkToVote=hrefVote, linkToResults=hrefResults, linkToTokens=hrefTokens)
+                            linkToVote=hrefVote, linkToResults=hrefResults, linkToTokens=hrefTokens, \
+                            admToken=db.getAdmToken(poll_name))
     return readPartial("base").format(title=poll_name, body=body)
 
-def buildVoteInPoll(poll_name):
+def buildVoteInPoll(poll_name, preToken=""):
     script = readPartial("vote-js-partial.js")
     optionWrapper = "<span><input class='vote-option' type=checkbox id={}>{}</input></span>"
     options = db.getOptions(poll_name)
@@ -57,7 +58,7 @@ def buildVoteInPoll(poll_name):
     # tokens needed?
     tokenInput = ""
     if db.tokenNeededExternal(poll_name):
-        tokenInput = "<input type=text id=token-field>"
+        tokenInput = "<input type=text value='{}' id=token-field>".format(preToken)
 
     # get poll question
     question = db.queryQuestion(poll_name)
@@ -94,7 +95,7 @@ def buildTokenQuery(poll_name, admToken, newTokens=0):
                             <h1>Poll does not use tokens.</h1>
                         </div>
                         ''')
-    elif not db.checkAdmTokenValid(poll_name, admToken) and False:
+    elif not db.checkAdmTokenValid(poll_name, admToken):
         return readPartial("base").format(title="AdminVerifyFailed", \
                         body='''
                         <div class='main-container'>
