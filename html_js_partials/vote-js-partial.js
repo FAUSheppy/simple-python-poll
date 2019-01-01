@@ -12,6 +12,9 @@ function submitt(){
     }
     var url = new URL(window.location.href)
     pollname = url.searchParams.get("name")
+    if(pollname == null){
+        pollname = document.getElementById("poll-ident").className
+    }
 	optString = ""
 	for(x in options){
 		if(options[x].checked){
@@ -29,5 +32,8 @@ function submitt(){
 function showResults(){
     var url = new URL(window.location.href)
     pollname = url.searchParams.get("name")
+    if(pollname == null){
+        pollname = document.getElementById("poll-ident").className
+    }
     window.location.href = window.location.origin + "/results" + "?name=" + pollname 
 }
