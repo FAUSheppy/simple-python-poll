@@ -23,14 +23,15 @@ def createPoll():
 
 @app.route('/post-create')
 def postCreatePoll():
-    useTokens = arg("tokens") == "1"
+    useTokens = bool(int(arg("tokens")))
     question  = arg("q").strip()
+    multi     = bool(int(arg("multi")))
     tokens = None
     if not question.endswith("?"):
         question += "?"
     if db.checkPollExists(getPollName()):
         return "<h1>Poll {} already exists!<h1>".format(getPollName())
-    tokens = db.createPoll(getPollName(), arg("options").split(","), question, useTokens)
+    tokens = db.createPoll(getPollName(), arg("options").split(","), question, useTokens, multi)
     return frontend.buildPostCreatePoll(getPollName(), tokens)
 
 @app.route('/polladmin')

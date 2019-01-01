@@ -60,6 +60,7 @@ def init():
                     has_tokens integer,\
                     show_results integer,\
                     question text,\
+                    multi integer, \
                     date text)"\
                     )
     c.execute("CREATE TABLE {}(name_option text, count integer)".format(CFG("options_table_name")))
@@ -113,6 +114,13 @@ def incrementOption(cursor, poll_name, option):
     req = "UPDATE {} SET count=count+1 WHERE name_option = '{}';".format(CFG("options_table_name"), key)
     cursor.execute(req)
 
+def isMultiChoice(poll_name):
+    conn, c = connectDB()
+    req = "SELECT multi FROM {} WHERE name = '{}'".format(CFG("poll_table_name"), poll_name)
+    ret = queryOne(c, req) == 1
+    closeDB(conn)
+    return ret
+
 def vote(poll_name, options_string, token_used="DUMMY_INVALID_TOKEN"):
     conn, c = connectDB()
 
@@ -123,7 +131,13 @@ def vote(poll_name, options_string, token_used="DUMMY_INVALID_TOKEN"):
     markTokenUsedExternal(token_used, options_string)
 
     # save changes
-    options = options_string.split(",")
+    # lambda x: x -> röfl :D
+    options = list(filter(lambda x: x, options_string.split(",")))
+    # check if multi-choice
+    if len(options) > 1:
+        if not isMultiChoice(poll_name):
+            raise ValueError("multiple options for single choice")
+
     for opt in options:
         incrementOption(c, poll_name, opt)
 
@@ -213,7 +227,7 @@ def checkPollExists(poll_name):
     conn.close()
     return tmp
 
-def createPoll(poll_name, options_arr, question, has_tokens, openresults=True):
+def createPoll(poll_name, options_arr, question, has_tokens, multi, openresults=True):
     if checkPollExists(poll_name):
         raise RuntimeError("Cannot create poll, because the poll already exists.")
     conn, c = connectDB()
@@ -221,17 +235,17 @@ def createPoll(poll_name, options_arr, question, has_tokens, openresults=True):
     # actual poll
     name = poll_name
     options = ",".join(options_arr)
-    has_tokens = str(int(has_tokens))
-    show_results = str(int(openresults))
     date = "NONE"
-    params = (name, options, has_tokens, show_results, question, date) 
-    req = "INSERT INTO {} VALUES (?,?,?,?,?,?)".format(CFG("poll_table_name"))
+    show_results = openresults
+    params = (name, options, has_tokens, show_results, question, multi, date) 
+    req = "INSERT INTO {} VALUES (?,?,?,?,?,?,?)".format(CFG("poll_table_name"))
     c.execute(req, params)
 
     # tokens if needed
     tokens = []
     if has_tokens:
         tokens = genTokens(c, poll_name)
+    print(type(has_tokens))
 
     # adminAccessToken
     createAdminToken(c, poll_name)

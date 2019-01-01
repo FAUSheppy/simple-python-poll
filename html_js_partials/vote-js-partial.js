@@ -5,6 +5,7 @@ function cancle(){
 function submitt(){
 	options  = document.getElementsByClassName("vote-option")
     token    = document.getElementById("token-field")
+    multi    = %s
     if(token){
         token = token.value
     }else{
@@ -16,14 +17,29 @@ function submitt(){
         pollname = document.getElementById("poll-ident").className
     }
 	optString = ""
+    count = 0
 	for(x in options){
 		if(options[x].checked){
 			if(x != 0){
 				optString += ","
 			}
 			optString += options[x].id
+            count++
 		}
 	}
+
+    /* check if at least one selcted */
+    if(count == 0){
+        alert("Must select at least one option")
+        return
+    }
+
+    /* check if multi choice */
+    if(count > 1 && !multi){
+        alert("Can only select ONE option!")
+        return
+    }
+
 	window.location.href = window.location.origin + "/post-vote" + "?" + "name=" + pollname
                                     + "&" + "token=" + token
                                     + "&" + "selected=" + optString

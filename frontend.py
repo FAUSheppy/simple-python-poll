@@ -38,7 +38,7 @@ def buildPostCreatePoll(poll_name, tokens):
     hrefVote =    hostname + "vote?name="       + poll_name
     hrefResults = hostname + "results?name="    + poll_name
     hrefTokens =  hostname + "polladmin?name="  + poll_name + "&admtoken=" + db.getAdmToken(poll_name)
-
+    
     tokenPartial = buildTokenPartial(tokens)
    
     body = readPartial("post-create-partial").format(tokens=tokenPartial, poll_name=poll_name, \
@@ -47,7 +47,10 @@ def buildPostCreatePoll(poll_name, tokens):
     return readPartial("base").format(title=poll_name, body=body)
 
 def buildVoteInPoll(poll_name, preToken=""):
-    script = readPartial("vote-js-partial.js")
+    multiStr = "false" #javascrit false
+    if(db.isMultiChoice(poll_name)):
+        multiStr = "true"
+    script = readPartial("vote-js-partial.js") % multiStr
     optionWrapper = "<span><input class='vote-option' type=checkbox id={}>{}</input></span>"
     options = db.getOptions(poll_name)
     if poll_name == "" or poll_name == None:
@@ -58,7 +61,12 @@ def buildVoteInPoll(poll_name, preToken=""):
     # tokens needed?
     tokenInput = ""
     if db.tokenNeededExternal(poll_name):
-        tokenInput = "<input type=text value='{}' id=token-field>".format(preToken)
+        tokenInput = "Token: <input type=text value='{}' id=token-field>".format(preToken)
+
+    # poll info
+    info = "SINGLE CHOICE"
+    if(db.isMultiChoice(poll_name)):
+        info = "MULTIPLE CHOICE"
 
     # get poll question
     question = db.queryQuestion(poll_name)
@@ -69,7 +77,7 @@ def buildVoteInPoll(poll_name, preToken=""):
         voteOptions += optionWrapper.format(opt, opt)
 
     body = readPartial("vote-partials").format(script=script, question=question, \
-                    poll_name=poll_name, voteoptions=voteOptions, tokenInput=tokenInput)
+                    poll_name=poll_name, info=info, voteoptions=voteOptions, tokenInput=tokenInput)
     return readPartial("base").format(title="voting", body=body)
 
 
