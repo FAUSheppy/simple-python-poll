@@ -4,10 +4,9 @@ from flask import request
 import os.path
 import htmlsnippets as html
 
-HTML_DIR = "html_js_partials/"
 
 def buildStartPage():
-    return htlm.startPage
+    return html.startPage
 
 def buildCreatePoll(poll_name):
     return html.pollCreator
@@ -29,10 +28,10 @@ def buildPostCreatePoll(poll_name, tokens):
     tokenPartial = html.buildTokenPartial(tokens)
 
     # build the complete page #
-    body = readPartial("post-create-partial").format(tokens=tokenPartial, poll_name=poll_name, \
+    body = html.readPartial("post-create-partial").format(tokens=tokenPartial, poll_name=poll_name, \
                             linkToVote=hrefVote, linkToResults=hrefResults, linkToTokens=hrefTokens, \
                             admToken=db.getAdmToken(poll_name))
-    return readPartial("base").format(title=poll_name, body=body)
+    return html.readPartial("base").format(title=poll_name, body=body)
 
 
 def buildVoteInPoll(poll_name, preToken=""):
@@ -41,7 +40,7 @@ def buildVoteInPoll(poll_name, preToken=""):
     multiStr = "false"
     if(db.isMultiChoice(poll_name)):
         multiStr = "true"
-    script = readPartial("vote-js-partial.js") % multiStr
+    script = html.readPartial("vote-js-partial.js") % multiStr
     info = html.infoSingleChoice
     if(db.isMultiChoice(poll_name)):
         info = html.infoMultipleChoice
@@ -65,9 +64,9 @@ def buildVoteInPoll(poll_name, preToken=""):
         tokenInput = html.tokenInput.format(preToken)
 
     # combine everything #
-    body = readPartial("vote-partials").format(script=script, question=question, \
+    body = html.readPartial("vote-partials").format(script=script, question=question, \
                     poll_name=poll_name, info=info, voteoptions=voteOptions, tokenInput=tokenInput)
-    return readPartial("base").format(title="voting", body=body)
+    return html.readPartial("base").format(title="voting", body=body)
 
 
 def buildPostVote(poll_name, token, selectedOptions):
@@ -76,15 +75,15 @@ def buildPostVote(poll_name, token, selectedOptions):
     except PermissionError:
         return html.voteFailed
     resultsHref = html.resultsHref % poll_name
-    body = readPartial("post-vote-partial").format(poll_name=poll_name, resultsHref=resultsHref)
-    return readPartial("base").format(title=poll_name, body=body)
+    body = html.readPartial("post-vote-partial").format(poll_name=poll_name, resultsHref=resultsHref)
+    return html.readPartial("base").format(title=poll_name, body=body)
 
 
 def buildTokenQuery(poll_name, admToken, newTokens=0):
     if not db.tokenNeededExternal(poll_name):
-        return readPartial("base").format(title="NoTokens", html.pollHasNoTokens)
+        return html.readPartial("base").format(title="NoTokens", body=html.pollHasNoTokens)
     elif not db.checkAdmTokenValid(poll_name, admToken):
-        return readPartial("base").format(title="AdminVerifyFailed", html.adminTokenInvalid)
+        return html.readPartial("base").format(title="AdminVerifyFailed", body=html.adminTokenInvalid)
     else:
         # get current tokens #
         tokens = db.getTokensExternal(poll_name)
@@ -96,14 +95,14 @@ def buildTokenQuery(poll_name, admToken, newTokens=0):
             return html.redirectTo.format(href)
         
         # show the page normally #
-        tokenPartial = buildTokenPartial(tokens)
-        body = readPartial("token-query-partial").format(poll_name=poll_name, tokens=tokenPartial)
-        return readPartial("base").format(title=poll_name, body=body)
+        tokenPartial = html.buildTokenPartial(tokens)
+        body = html.readPartial("token-query-partial").format(poll_name=poll_name, tokens=tokenPartial)
+        return html.readPartial("base").format(title=poll_name, body=body)
 
 
 def buildShowResults(poll_name):
     resultsDict, total = db.getResults(poll_name)
-    resultWrapper = readPartial("result-wrapper-partial")
+    resultWrapper = html.readPartial("result-wrapper-partial")
     results = resultWrapper.format(name="Answer", width="100%", ratio="Percentage", absolute="#votes") + "<hr>"
     
     # build the percentage bar #
@@ -117,6 +116,6 @@ def buildShowResults(poll_name):
         name  = r
         results += resultWrapper.format(name=name, width=width, ratio=ratioString, absolute=count)
 
-    body = readPartial("results-partial").format(poll_name=poll_name, question=db.queryQuestion(poll_name),\
+    body = html.readPartial("results-partial").format(poll_name=poll_name, question=db.queryQuestion(poll_name),\
                     voteoptions_results=results)
-    return readPartial("base").format(title=poll_name, body=body)
+    return html.readPartial("base").format(title=poll_name, body=body)
