@@ -2,80 +2,69 @@ from cpwrap import CFG
 import database as db
 from flask import request
 import os.path
+import htmlsnippets as html
 
 HTML_DIR = "html_js_partials/"
 
-def readPartial(name):
-    if not name.endswith((".html",".js",".css")):
-        name = name + ".html"
-    path = os.path.join(HTML_DIR, name)
-    with open(path,"r") as f:
-        return f.read()
-
 def buildStartPage():
-    return readPartial("base").format(title="simple-poll", body=readPartial("start-page"))
+    return htlm.startPage
 
 def buildCreatePoll(poll_name):
-    body = readPartial("create-poll-partial")
-    return readPartial("base").format(title="poll-create", body=body)
-
-def buildTokenPartial(tokens):
-    tokenPartial = ""
-    tokenWrapper = "<div class='single-token'>{}</div>"
-    if tokens:
-        for tk in tokens:
-            if type(tk) == tuple:
-                tk = tk[0]
-            tokenPartial += tokenWrapper.format(tk)
-    return tokenPartial
+    return html.pollCreator
 
 def buildPostCreatePoll(poll_name, tokens):
+
+    # use HTML-header if there is one #
     hostname = request.url_root
     reverseProxyHostname = request.headers.get('X-REAL-HOSTNAME')
     if reverseProxyHostname:
         hostname = reverseProxyHostname
 
+    # build links #
     hrefVote =    hostname + "vote?name="       + poll_name
     hrefResults = hostname + "results?name="    + poll_name
     hrefTokens =  hostname + "polladmin?name="  + poll_name + "&admtoken=" + db.getAdmToken(poll_name)
     
-    tokenPartial = buildTokenPartial(tokens)
-   
+    # show tokens if nessesary #
+    tokenPartial = html.buildTokenPartial(tokens)
+
+    # build the complete page #
     body = readPartial("post-create-partial").format(tokens=tokenPartial, poll_name=poll_name, \
                             linkToVote=hrefVote, linkToResults=hrefResults, linkToTokens=hrefTokens, \
                             admToken=db.getAdmToken(poll_name))
     return readPartial("base").format(title=poll_name, body=body)
 
+
 def buildVoteInPoll(poll_name, preToken=""):
-    multiStr = "false" #javascrit false
+
+    # tell javascript/user if it's multiple choice #
+    multiStr = "false"
     if(db.isMultiChoice(poll_name)):
         multiStr = "true"
     script = readPartial("vote-js-partial.js") % multiStr
-    optionWrapper = "<span><input class='vote-option' type=checkbox id={}>{}</input></span>"
+    info = html.infoSingleChoice
+    if(db.isMultiChoice(poll_name)):
+        info = html.infoMultipleChoice
+
+    # get poll question #
+    question = db.queryQuestion(poll_name)
+    
+    # build answer section #
     options = db.getOptions(poll_name)
     if poll_name == "" or poll_name == None:
-        return "<h1>No poll selected</h1>"
+        return html.noPollSelected
     elif options == None:
-        return "<h1>Poll {} not found.</h1>".format(poll_name)
-
-    # tokens needed?
-    tokenInput = ""
-    if db.tokenNeededExternal(poll_name):
-        tokenInput = "Token: <input type=text value='{}' id=token-field>".format(preToken)
-
-    # poll info
-    info = "SINGLE CHOICE"
-    if(db.isMultiChoice(poll_name)):
-        info = "MULTIPLE CHOICE"
-
-    # get poll question
-    question = db.queryQuestion(poll_name)
-
-    # build options
+        return html.noPollWithName.format(poll_name)
     voteOptions = ""
     for opt in options:
-        voteOptions += optionWrapper.format(opt, opt)
+        voteOptions += html.optionWrapper.format(opt, opt)
 
+    # tokens #
+    tokenInput = ""
+    if db.tokenNeededExternal(poll_name):
+        tokenInput = html.tokenInput.format(preToken)
+
+    # combine everything #
     body = readPartial("vote-partials").format(script=script, question=question, \
                     poll_name=poll_name, info=info, voteoptions=voteOptions, tokenInput=tokenInput)
     return readPartial("base").format(title="voting", body=body)
@@ -85,48 +74,39 @@ def buildPostVote(poll_name, token, selectedOptions):
     try:
         db.vote(poll_name, selectedOptions, token)
     except PermissionError:
-        return readPartial("base").format(title="Vote Failed", \
-                        body='''
-                        <div class='main-container'>
-                            <h1>Vote failed<h1>Token invalid, cancled or already used.</h1> :(
-                        </div>
-                        ''')
-    resultsHref = "'/results?name=%s'" % poll_name
+        return html.voteFailed
+    resultsHref = html.resultsHref % poll_name
     body = readPartial("post-vote-partial").format(poll_name=poll_name, resultsHref=resultsHref)
     return readPartial("base").format(title=poll_name, body=body)
 
+
 def buildTokenQuery(poll_name, admToken, newTokens=0):
     if not db.tokenNeededExternal(poll_name):
-        return readPartial("base").format(title="AdminVerifyFailed", \
-                        body='''
-                        <div class='main-container'>
-                            <h1>Poll does not use tokens.</h1>
-                        </div>
-                        ''')
+        return readPartial("base").format(title="NoTokens", html.pollHasNoTokens)
     elif not db.checkAdmTokenValid(poll_name, admToken):
-        return readPartial("base").format(title="AdminVerifyFailed", \
-                        body='''
-                        <div class='main-container'>
-                            <h1>Admin-Token invalid</h1>
-                        </div>
-                        ''')
+        return readPartial("base").format(title="AdminVerifyFailed", html.adminTokenInvalid)
     else:
-        pass
+        # get current tokens #
         tokens = db.getTokensExternal(poll_name)
+
+        # if new tokens, generate new tokens and simply reload the page #
         if len(tokens) < newTokens:
             db.genTokensExternal(poll_name, newTokens - len(tokens))
-            href = "/polladmin?name=%s&admtoken=%s" % (poll_name,admToken)
-            redirect = '<meta http-equiv="refresh" content="0"; url="{}">'.format(href)
-            return "<html>{}</html>".format(redirect)
+            href = "/polladmin?name=%s&admtoken=%s" % (poll_name, admToken)
+            return html.redirectTo.format(href)
+        
+        # show the page normally #
         tokenPartial = buildTokenPartial(tokens)
         body = readPartial("token-query-partial").format(poll_name=poll_name, tokens=tokenPartial)
         return readPartial("base").format(title=poll_name, body=body)
+
 
 def buildShowResults(poll_name):
     resultsDict, total = db.getResults(poll_name)
     resultWrapper = readPartial("result-wrapper-partial")
     results = resultWrapper.format(name="Answer", width="100%", ratio="Percentage", absolute="#votes") + "<hr>"
     
+    # build the percentage bar #
     for r in resultsDict.keys():
         ratio = 0
         if not total == 0:
