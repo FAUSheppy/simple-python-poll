@@ -15,5 +15,4 @@ If you are running the server behind a reverse proxy you need to set a header wi
 * multiple choice
 * hide results
 * token based voting
-* changing your vote [not yet implemented]
 * sqlite-backend

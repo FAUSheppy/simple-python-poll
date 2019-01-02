@@ -25,3 +25,4 @@ maybe:
     hidden-results   [ ]
     ip-limit         [ ]
     tokens-used-view [ ]
+    change-vote (token) [ ]
