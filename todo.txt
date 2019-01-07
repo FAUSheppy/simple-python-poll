@@ -1,28 +1,28 @@
 code:
-    render <-> format [ ]
-    sql-escaping      [ ]
+    render <-> format   [ ]
+    sql-escaping        [ ]
 
 database:
-    record-vote     [x]
-    create-poll     [x]
-    query-results   [x]
-    query-tokens    [x]
+    record-vote         [x]
+    create-poll         [x]
+    query-results       [x]
+    query-tokens        [x]
 
 frontend:
-    main-page       [x]
-    createpoll-page [x]
-    result-page     [x]
-    cast-vote-page  [x]
-    post-vote-page  [x]
-    postcreate-page [x]
+    main-page           [x]
+    createpoll-page     [x]
+    result-page         [x]
+    cast-vote-page      [x]
+    post-vote-page      [x]
+    postcreate-page     [x]
 
 core-functionality:
-    single-answer   [x]
-    token-check     [x]
-    generate-tokens [x]
+    single-answer       [x]
+    token-check         [x]
+    generate-tokens     [x]
 
 maybe:
-    hidden-results   [ ]
-    ip-limit         [ ]
-    tokens-used-view [ ]
+    hidden-results      [ ]
+    ip-limit            [ ]
+    tokens-used-view    [ ]
     change-vote (token) [ ]
