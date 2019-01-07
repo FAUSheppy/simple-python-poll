@@ -6,13 +6,12 @@ Many existing solution use a massive amount of third-party CSS and JavaScript, t
 This software is therefore intended to be an easy deployable, minnimum feature alternative to more complex solutions like [LimeSurvey](https://www.limesurvey.org).
 
 # Running behind a reverse proxy
-If you are running the server behind a reverse proxy you need to set a header with the correct hostname. In nginx that would be:
+If you are running the server behind a reverse proxy you must set a *X-REAL-HOSTNAME*-header with the correct hostname. In nginx that would be:
 
     add_header X-REAL-HOSTNAME $hostname;
 
 # Supported Features
 * single choice
 * multiple choice
-* hide results
+* hidden results
 * token based voting
-* sqlite-backend
