@@ -245,7 +245,6 @@ def createPoll(poll_name, options_arr, question, has_tokens, multi, openresults=
     tokens = []
     if has_tokens:
         tokens = genTokens(c, poll_name)
-    print(type(has_tokens))
 
     # adminAccessToken
     createAdminToken(c, poll_name)
