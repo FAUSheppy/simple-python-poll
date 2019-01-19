@@ -53,7 +53,7 @@ def tokenQuery(preToken=""):
     else:
         token = arg("admtoken")
  
-    return frontend.buildTokenQuery(name, token, newTokens=newTokens)
+    return frontend.buildTokenQuery(name, token, newTokens=newTokens, limitReached=newTokens >= 50)
 
 @app.route('/vote')
 def voteInPoll(poll_name=None, preToken=""):
@@ -94,4 +94,4 @@ def css():
 
 if __name__ == "__main__":
     db.init()
-    app.run(host='127.0.0.1')
+    app.run(host='0.0.0.0')

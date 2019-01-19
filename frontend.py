@@ -79,7 +79,7 @@ def buildPostVote(poll_name, token, selectedOptions):
     return html.readPartial("base").format(title=poll_name, body=body)
 
 
-def buildTokenQuery(poll_name, admToken, newTokens=0):
+def buildTokenQuery(poll_name, admToken, newTokens=0, limitReached=False):
     if not db.tokenNeededExternal(poll_name):
         return html.readPartial("base").format(title="NoTokens", body=html.pollHasNoTokens)
     elif not db.checkAdmTokenValid(poll_name, admToken):
@@ -94,9 +94,15 @@ def buildTokenQuery(poll_name, admToken, newTokens=0):
             href = "/polladmin?name=%s&admtoken=%s" % (poll_name, admToken)
             return html.redirectTo.format(href)
         
+        # message if max tokens is reached
+        limit = ""
+        if limitReached:
+            limit = "TOKEN LIMIT REACHED! (50)"
+            
         # show the page normally #
         tokenPartial = html.buildTokenPartial(tokens)
-        body = html.readPartial("token-query-partial").format(poll_name=poll_name, tokens=tokenPartial)
+        body = html.readPartial("token-query-partial").format(poll_name=poll_name, \
+                                                                tokens=tokenPartial, limit=limit)
         return html.readPartial("base").format(title=poll_name, body=body)
 
 
