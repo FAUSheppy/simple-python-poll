@@ -14,3 +14,8 @@ If you are running the server behind a reverse proxy you must set a *X-REAL-HOST
 * single choice
 * multiple choice
 * token based voting
+
+# Pictures
+![Creation](https://media.atlantishq.de/pollCreate.png)
+![Voting](https://media.atlantishq.de/pollVote.png)
+![Results](https://media.atlantishq.de/pollResults.png)
