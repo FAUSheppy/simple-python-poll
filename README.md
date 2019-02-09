@@ -13,5 +13,4 @@ If you are running the server behind a reverse proxy you must set a *X-REAL-HOST
 # Supported Features
 * single choice
 * multiple choice
-* hidden results
 * token based voting
