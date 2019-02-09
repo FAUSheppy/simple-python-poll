@@ -1,7 +1,7 @@
 code:
     render <-> format       [ ]
     generate token button   [x]
-    sql-escaping            [ ]
+    sql-escaping            [x]
     csv results             [ ]
 
 database:
