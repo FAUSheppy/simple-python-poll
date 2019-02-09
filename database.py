@@ -12,18 +12,24 @@ def closeDB(conn, cursor=None):
     conn.commit()
     conn.close()
 
-def queryAll(cursor, reqString):
+def queryAll(cursor, reqString, *args):
     try:
-        cursor.execute(reqString)
+        if len(args) > 0:
+            cursor.execute(reqString, *args)
+        else:
+            cursor.execute(reqString)
         ret = cursor.fetchall()
         if ret:
             return ret
     except IndexError:
         return []
 
-def queryOne(cursor, reqString):
+def queryOne(cursor, reqString, *args):
     try:
-        cursor.execute(reqString)
+        if len(args) > 0:
+            cursor.execute(reqString, *args)
+        else:
+            cursor.execute(reqString)
         ret = cursor.fetchone()
         if ret:
             return ret[0]
@@ -32,8 +38,8 @@ def queryOne(cursor, reqString):
 
 def queryQuestion(poll_name):
     conn, c = connectDB()
-    req = "SELECT question from {} WHERE name = '{}'".format(CFG("poll_table_name"), poll_name)
-    tmp = queryOne(c, req)
+    req = "SELECT question from {} WHERE name = ?".format(CFG("poll_table_name"))
+    tmp = queryOne(c, req, (poll_name,))
     conn.close()
     return tmp
 
@@ -45,9 +51,8 @@ def tokenNeededExternal(poll_name):
 
 def markTokenUsedExternal(token, optStr=""):
     conn, c = connectDB()
-    req = "UPDATE {} SET \"options_selected\"='{}' WHERE token='{}'".format(CFG("tokens_table_name"), \
-                    optStr, token)
-    c.execute(req)
+    req = "UPDATE {} SET \"options_selected\"=? WHERE token=?".format(CFG("tokens_table_name"))
+    c.execute(req, (optStr, token,))
     closeDB(conn)
 
 def init():
@@ -69,55 +74,55 @@ def init():
     closeDB(conn)
 
 def checkTokenValid(cursor, token, poll_name):
-    req = "SELECT name, options_selected from {} where token='{}'".format(CFG("tokens_table_name"), token)
-    answer = queryAll(cursor, req)
+    req = "SELECT name, options_selected from {} where token=?".format(CFG("tokens_table_name"))
+    answer = queryAll(cursor, req, (token,))
     return answer and answer[0][0] == poll_name and answer[0][1] == 'NONE'
 
 def checkAdmTokenValid(poll_name, adm_token):
     conn, c = connectDB()
-    req = "SELECT poll_name from {} where adm_token = \"{}\"".format(CFG("admintoken_table_name"), adm_token)
-    answer = queryOne(c, req)
+    req = "SELECT poll_name from {} where adm_token=?".format(CFG("admintoken_table_name"))
+    answer = queryOne(c, req, (adm_token,))
     closeDB(conn)
     return answer == poll_name
 
 def isValidAdmToken(adm_token):
     conn, c = connectDB()
-    req = "SELECT *  from {} where adm_token='{}'".format(CFG("admintoken_table_name"), adm_token)
-    answer = bool(queryOne(c, req))
+    req = "SELECT *  from {} where adm_token=?".format(CFG("admintoken_table_name"))
+    answer = bool(queryOne(c, req, (adm_token,)))
     closeDB(conn)
     return answer
 
 def isValidToken(token):
     conn, c = connectDB()
-    req = "SELECT * from {} where token='{}'".format(CFG("tokens_table_name"), token)
-    answer = bool(queryOne(c, req))
+    req = "SELECT * from {} where token=?".format(CFG("tokens_table_name"))
+    answer = bool(queryOne(c, req, (token,)))
     closeDB(conn)
     return answer
 
 def pollNameFromToken(token):
     conn, c = connectDB()
-    req = "SELECT name from {} where token='{}'".format(CFG("tokens_table_name"), token)
-    answer = queryOne(c, req)
+    req = "SELECT name from {} where token=?".format(CFG("tokens_table_name"))
+    answer = queryOne(c, req, (token,))
     if not answer:
-        req = "SELECT poll_name from {} where adm_token='{}'".format(CFG("admintoken_table_name"), token)
-        answer = queryOne(c, req)
+        req = "SELECT poll_name from {} where adm_token=?".format(CFG("admintoken_table_name"))
+        answer = queryOne(c, req, (token,))
     closeDB(conn)
     return answer
 
 
 def checkTokenNeeded(cursor, poll_name):
-    req = "SELECT has_tokens FROM {} WHERE name = '{}'".format(CFG("poll_table_name"), poll_name)
-    return queryOne(cursor, req) == 1;
+    req = "SELECT has_tokens FROM {} WHERE name=?".format(CFG("poll_table_name"))
+    return queryOne(cursor, req, (poll_name,)) == 1
 
 def incrementOption(cursor, poll_name, option):
     key = poll_name+"-"+option
-    req = "UPDATE {} SET count=count+1 WHERE name_option = '{}';".format(CFG("options_table_name"), key)
-    cursor.execute(req)
+    req = "UPDATE {} SET count=count+1 WHERE name_option=?".format(CFG("options_table_name"))
+    cursor.execute(req, (key,))
 
 def isMultiChoice(poll_name):
     conn, c = connectDB()
-    req = "SELECT multi FROM {} WHERE name = '{}'".format(CFG("poll_table_name"), poll_name)
-    ret = queryOne(c, req) == 1
+    req = "SELECT multi FROM {} WHERE name=?".format(CFG("poll_table_name"))
+    ret = queryOne(c, req, (poll_name,)) == 1
     closeDB(conn)
     return ret
 
@@ -145,17 +150,16 @@ def vote(poll_name, options_string, token_used="DUMMY_INVALID_TOKEN"):
 
 def getOptionCount(c, poll_name, option):
     key = poll_name + "-" + option
-    req = "SELECT \"count\" FROM {table} WHERE \"name_option\" = '{key}'".format(
-                    table=CFG("options_table_name"),key=key)
-    count = queryOne(c, req)
+    req = "SELECT count FROM {table} WHERE name_option=?".format(table=CFG("options_table_name"))
+    count = queryOne(c, req, (key,))
     if count == None:
         raise AssertionError("Unknown answer for poll. WTF?")
     return count;
 
 def getResults(poll_name):
     conn, c = connectDB()
-    req = "SELECT options from {} where name = '{}'".format(CFG("poll_table_name"), poll_name)
-    options_str = queryOne(c, req)
+    req = "SELECT options from {} where name=?".format(CFG("poll_table_name"))
+    options_str = queryOne(c, req, (poll_name,))
 
     if not options_str:
         raise LookupError("Poll '{}' not found in DB".format(poll_name))
@@ -179,9 +183,9 @@ def insertOption(c, poll_name, option):
     c.execute(req, params)
 
 def getTokensExternal(poll_name):
-    req = "SELECT token FROM {} WHERE name='{}'".format(CFG("tokens_table_name"), poll_name)
+    req = "SELECT token FROM {} WHERE name=?".format(CFG("tokens_table_name"))
     conn, c = connectDB()
-    tmp = queryAll(c, req)
+    tmp = queryAll(c, req, (poll_name,))
     conn.close()
     return tmp
 
@@ -215,15 +219,15 @@ def createAdminToken(c, poll_name):
 
 def getAdmToken(poll_name):
     conn, c = connectDB()
-    req = "SELECT adm_token FROM {} WHERE poll_name='{}'".format(CFG("admintoken_table_name"), poll_name)
-    admtok = queryOne(c, req)
+    req = "SELECT adm_token FROM {} WHERE poll_name=?".format(CFG("admintoken_table_name"))
+    admtok = queryOne(c, req, (poll_name,))
     closeDB(conn)
     return admtok
 
 def checkPollExists(poll_name):
     conn, c = connectDB()
-    req = "SELECT EXISTS( SELECT 1 FROM {} WHERE name='{}')".format(CFG("poll_table_name"), poll_name)
-    tmp = queryOne(c, req)
+    req = "SELECT EXISTS( SELECT 1 FROM {} WHERE name=?)".format(CFG("poll_table_name"))
+    tmp = queryOne(c, req, (poll_name,))
     conn.close()
     return tmp
 
@@ -258,7 +262,8 @@ def createPoll(poll_name, options_arr, question, has_tokens, multi, openresults=
 
 def getOptions(poll_name):
     conn, c = connectDB()
-    options_str = queryOne(c, "SELECT options FROM {} WHERE name='{}'".format(CFG("poll_table_name"), poll_name))
+    req = "SELECT options FROM {} WHERE name=?".format(CFG("poll_table_name"))
+    options_str = queryOne(c, req, (poll_name,))
     if options_str == None:
         return None
     options = options_str.split(",")
