@@ -38,6 +38,7 @@ span{
     margin-left: auto;
     margin-right: auto;
     margin-top: 10%;
+
     padding: 40px;
 
     display: block;
@@ -120,4 +121,26 @@ input[type="checkbox"]{
 .single-result-abs{
     float: right;
     width: 10%;
+}
+
+.footer{
+    position: fixed;
+    width: 100%;
+    background-color: grey;
+    bottom: 0;
+    left: 0;
+    height: 30px;
+    
+}
+
+.footerLink{
+    margin-top: 0;
+    padding-top: 0;
+    font-size: 12pt;
+    text-decoration: none;
+    color: black;
+}
+.mid{
+    margin-right: 25%;
+    margin-left: 25%;
 }
