@@ -1,8 +1,8 @@
-function cancle(){
+function cancel(){
 	window.location.href = window.location.origin
 }
 
-function submitt(){
+function submit(){
 	options  = document.getElementsByClassName("vote-option")
     token    = document.getElementById("token-field")
     multi    = %s
