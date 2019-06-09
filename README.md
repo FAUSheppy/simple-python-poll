@@ -8,7 +8,7 @@ This software is therefore intended to be an easy deployable, minnimum feature a
 # Running behind a reverse proxy
 If you are running the server behind a reverse proxy you must set a *X-REAL-HOSTNAME*-header with the correct hostname. In nginx that would be:
 
-    add_header X-REAL-HOSTNAME $hostname;
+    proxy_set_header X-REAL-HOSTNAME $hostname;
 
 # Supported Features
 * single choice

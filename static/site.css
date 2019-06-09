@@ -6,7 +6,7 @@ body{
 button{
     background-color: red;
     border-color: red;
-    color: #d0b9b9;
+    color: #583535;
     font-size: 20;
     font-weight: bold;
 }
@@ -124,6 +124,9 @@ input[type="checkbox"]{
 }
 
 .footer{
+    text-align: center;
+    font-weight: bold;
+    font-size: 25px;
     position: fixed;
     width: 100%;
     background-color: grey;

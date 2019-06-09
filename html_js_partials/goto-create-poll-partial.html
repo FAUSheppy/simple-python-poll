@@ -2,7 +2,7 @@
     function create(){
 		window.location.href = window.location.origin + "/create?pollname=" + input;
 	}
-    function submitt(){
+    function submit(){
 		input = document.getElementById("input").value
         if(input == ""){
             alert("Must give name of or token for a poll!")
@@ -17,7 +17,7 @@
     <div>
     <div style="margin-top: 20px;">
         <input type="text" id="input"> 
-        <button onclick="submitt()">Go!</button>
+        <button onclick="submit()">Go!</button>
     </div>
     <div class="button-container">
         <button onclick="create()">New Poll</button>

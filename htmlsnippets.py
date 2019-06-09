@@ -27,7 +27,7 @@ noPollWithName = "<h1>Poll {} not found.</h1>"
 tokenInput     = "Token: <input type=text value='{}' id=token-field>"
 
 infoSingleChoice = "SINGLE CHOICE"
-infoMultiChoice  = "MULTIPLE CHOICE"
+infoMultipleChoice  = "MULTIPLE CHOICE"
 resultsHref      = "'/results?name=%s'"
 
 pollHasNoTokens   = "<div class='main-container'><h1>Poll does not use tokens.</h1></div>"
