@@ -92,6 +92,10 @@ def multiplex():
 def css():
     return app.send_static_file('site.css')
 
+@app.route('/favicon.ico')
+def icon():
+    return app.send_static_file('favicon.ico')
+
 if __name__ == "__main__":
     db.init()
     app.run(host='0.0.0.0')
