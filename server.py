@@ -6,91 +6,85 @@ import database as db
 
 app = Flask(CFG("appName"))
 
-def getPollName():
-    return request.args.get("name")
-def arg(param):
-    return request.args.get(param)
-
-########################################################
-
 @app.route('/')
-def startPage():
-    return frontend.buildStartPage()
-
-@app.route('/create')
-def createPoll():
+def rootPage():
     return frontend.buildCreatePoll(getPollName())
 
-@app.route('/post-create')
+@app.route('/create')
 def postCreatePoll():
+    '''This path is intended to be called from javascript'''
+    
+    # parse arguments #
     useTokens = bool(int(arg("tokens")))
-    question  = arg("q").strip()
     multi     = bool(int(arg("multi")))
-    tokens = None
+    question  = arg("q").strip()
+
+    # sanatize input #
     if not question.endswith("?"):
         question += "?"
-    if db.checkPollExists(getPollName()):
-        return "<h1>Poll {} already exists!<h1>".format(getPollName())
-    tokens = db.createPoll(getPollName(), arg("options").split(","), question, useTokens, multi)
-    return frontend.buildPostCreatePoll(getPollName(), tokens)
 
-@app.route('/polladmin')
-def tokenQuery(preToken=""):
+    # create poll in database #
+    pollIdent = db.createPoll(getPollName(), arg("options").split(","), question, useTokens, multi)
+    return pollIdent
 
-    # generate new tokens if needed
-    newTokens = 0
-    try:
-        newTokens = int(arg("generate"))
-        if newTokens > 50:
-            newTokens = 50
-    except (ValueError, TypeError):
-        newTokens = 0
-   
-    name = getPollName()
-    if preToken:
-        token = preToken
-        name  = db.pollNameFromToken(preToken)
-    else:
-        token = arg("admtoken")
- 
-    return frontend.buildTokenQuery(name, token, newTokens=newTokens, limitReached=newTokens >= 50)
+@app.route('/tokenget')
+def tokenQuery():
+    '''This path is intended to be called from javascript'''
+
+    # parse arguments #
+    pollIdent = request.args.get("name")
+    admtoken  = arg("admtoken")
+
+    if not db.checkAdmTokenValid(admtoken):
+        return "401 ADMTOKENINVALID"
+
+    return db.genTokensExternal(pollIdent, count=1)
 
 @app.route('/vote')
-def voteInPoll(poll_name=None, preToken=""):
-    if poll_name:
-        ret = frontend.buildVoteInPoll(poll_name, preToken)
-    else:
-        poll_name = getPollName()
-        if not poll_name and preToken:
-            poll_name = db.pollNameFromToken(preToken)
-        ret = frontend.buildVoteInPoll(poll_name, preToken)
-    return ret
+def voteInPoll():
+    pollIdent = request.args.get("name")
+    token     = request.args.get("token")
+    
+    # try to infer poll from token if needed #
+    if not pollIdent:
+        pollIdent = db.getPollFromToke(token)
 
-@app.route('/post-vote')
-def postVote():
-    return frontend.buildPostVote(getPollName(), arg("token"), arg("selected"))
+    # check if poll exists #
+    if not db.pollExists(pollIdent):
+        return "404 POLLDOESNOTEXIST"
+
+
+    # check if auth need and/or valid #
+    if not db.checkTokenValidExternal(pollIdent, token):
+        return "401 TOKEN INVALID"
+
+    return "200 OK"
 
 @app.route('/results')
 def showResults():
-    return frontend.buildShowResults(getPollName())
+    pollIdent = request.args.get("name")
+    return frontend.buildShowResults(pollIdent)
 
-@app.route('/poll')
+@app.route('/providetoken')
 def multiplex():
     ident = arg("ident")
     if not ident:
-        raise ValueError("no ident given")
+        return "403 BADIDENT"
     elif db.checkPollExists(ident):
-        return voteInPoll(poll_name=ident)
+        return "302 poll ident"
     elif db.isValidAdmToken(ident):
-        return tokenQuery(preToken=ident)
+        return "302 adm ident"
     elif db.isValidToken(ident):
-        return voteInPoll(preToken=ident)
+        if db.getVoteForToken(ident)
+            return "302 results ident token"
+        else:
+            return "302 vote ident token"
     else:
-        return voteInPoll(poll_name=ident)
+        return "404 ident unknown"
 
-@app.route('/site.css')
-def css():
-    return app.send_static_file('site.css')
+@app.route('/static/<path:path>')
+def staticFiles():
+    send_from_directory('static', path)
 
 if __name__ == "__main__":
     db.init()

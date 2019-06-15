@@ -192,10 +192,7 @@ def getTokensExternal(poll_name):
 def genSingleToken(length=5):
     return ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(length))
 
-def genTokens(c, poll_name, count=False):
-    if not count:
-        count = CFG("default_token_count")
-
+def genTokens(c, poll_name, count=1):
     tokens = [ genSingleToken() for x in range(0,count) ]
     for token in tokens:
         name = poll_name 
@@ -205,7 +202,7 @@ def genTokens(c, poll_name, count=False):
         c.execute(req, params)
     return tokens
 
-def genTokensExternal(poll_name, count=False):
+def genTokensExternal(poll_name, count=1):
     conn, c = connectDB()
     tok = genTokens(c, poll_name, count)
     closeDB(conn)
@@ -231,7 +228,11 @@ def checkPollExists(poll_name):
     conn.close()
     return tmp
 
-def createPoll(poll_name, options_arr, question, has_tokens, multi, openresults=True):
+def createPoll(options_arr, question, has_tokens, multi, openresults=True):
+
+    # create random poll id #
+    poll_name = genSingleToken(10)
+
     if checkPollExists(poll_name):
         raise RuntimeError("Cannot create poll, because the poll already exists.")
     conn, c = connectDB()
@@ -258,7 +259,7 @@ def createPoll(poll_name, options_arr, question, has_tokens, multi, openresults=
         insertOption(c, poll_name, opt)
     
     closeDB(conn)
-    return tokens
+    return poll_name
 
 def getOptions(poll_name):
     conn, c = connectDB()
