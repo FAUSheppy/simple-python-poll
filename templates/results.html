@@ -1,0 +1,27 @@
+<html>
+  <head>
+      <link rel="stylesheet" href=/site.css>
+      <title>{{ websiteTitle }}</title>
+  </head>
+  <body>
+      <div class="main-container" id="main-container">
+        <div id="poll-name" class="poll-name-small">Poll: '{{ pollName }}'</div>
+        <div class="question-title">{{ question }}</div>
+      	<div class="results-container" id="vote-options-container">
+            <span>
+                <div class="single-result-name">  {{ name }}     </div>
+                <div class="single-result-ratio">
+                    <div class="percentage-bar" style="width: {width};">
+                        {{ ratio }}
+                    </div>
+                </div>
+                <div class="single-result-abs"> {{ absolute }} </div>
+            </span>
+      	</div>
+      	<div id="button-container">
+              <button onClick="window.location.href = window.location.origin">Main Page</button>
+      	</div>
+      </div>
+      {{ footer }}
+  </body>
+</html>

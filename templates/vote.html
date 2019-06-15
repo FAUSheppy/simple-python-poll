@@ -1,0 +1,24 @@
+<html>
+    <head>
+        <link rel="stylesheet" href=/site.css>
+        <title>{{ websiteTitle }}</title>
+    </head>
+    </body>
+    <div class="main-container" id="main-container">
+            <div id="poll-name" class="poll-name-small">Poll: '{poll_name}' - <b>{info}</b></div>
+        <div class="question-title">{question}</div>
+    	<div class="options-container vote" id="vote-options-container">
+            {voteoptions}
+    	</div>
+        <div id="token-container">
+            {tokenInput}
+        </div>
+        <hr>
+    	<div id="button-container">
+            <button onclick="showResults()">Results</button>
+    		<button onclick="submit()">Submit</button>
+    		<button onclick="cancel()">Cancel</button>
+    	</div>
+    </div>
+    {{ footer }}
+</html>
