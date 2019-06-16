@@ -1,6 +1,6 @@
 <html>
 <head>
-    <link rel="stylesheet" href=/site.css>
+    <link rel="stylesheet" href=/static/site.css>
     <title>{{ websiteTitle }}</title>
     {{ header }}
 </head>
@@ -9,15 +9,29 @@
         <div class="main-title" >Successfully created '{{ pollName }}' sucessfully created!</div>
         <hr>
         <div class=token-container>
-            {{ tokens }}
+            {% for tk in tokens %}
+                {{ tk }}
+            {% end %}
         </div>
         <div style="margin-top: 40px">
             <hr>
-            Vote-Link: <input class="link-field" type=text value={linkToVote}></input>
+
+            Vote-Link:
+            <input class="link-field" type=text
+                value=http://{{ hostname }}/viewvote?ident={{ pollIdent }}>
+            </input>
             <hr>
-            Results-Link: <input class="link-field" type=text value={linkToResults}></input>
+
+            Results-Link: 
+            <input class="link-field" type=text
+                value=http://{{ hostname }}/results?ident={{ pollIdent }}>
+            </input>
             <hr>
-            Tokens-Link: <input class="link-field" type=text value={linkToTokens}></input>
+
+            Tokens-Link: 
+            <input class="link-field" type=text
+                   value=http://{{ hostname }}/pollinfoadmin?ident={{ pollIdent }}
+            </input>
         </div>
         <hr>
         <div class=token-container>
