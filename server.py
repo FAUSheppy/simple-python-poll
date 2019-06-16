@@ -6,7 +6,7 @@ from   utils.cpwrap      import CFG
 import utils.frontend    as frontend
 import database.database as db
 
-# # HTML Snippets ##
+###### HTML Snippets #########
 tokenWrapper   = "<div class='single-token'>{}</div>"
 optionWrapper  = "<span><input class='vote-option' type=checkbox id={}>{}</input></span>"
 noPollSelected = "<h1>No poll selected</h1>"
@@ -23,16 +23,42 @@ redirectTo = '<html><meta http-equiv="refresh" content="0"; url="{}"></html>'
 
 app = flask.Flask(CFG("appName"))
 
+##### FRONTEND PATHS ########
+
 @app.route('/')
 def rootPage():
     footer = flask.Markup(flask.render_template("partials/footer.html"))
     header = flask.Markup(flask.render_template("partials/header.html"))
     return flask.render_template("startpage.html", header=header, footer=footer)
 
+@app.route("/tokeninputview")
+def tokenInputView():
+    '''This path displays a creation dialog for new poll'''
+    footer = flask.Markup(flask.render_template("partials/footer.html"))
+    header = flask.Markup(flask.render_template("partials/header.html"))
+    return flask.render_template("stringinput.html", header=header, footer=footer)
+
 @app.route("/viewcreate")
 def viewCreate():
     '''This path displays a creation dialog for new poll'''
     return flask.render_template("viewcreate.html")
+
+@app.route("/viewvote")
+def viewVote():
+    return "OK"
+
+@app.route('/viewresults')
+def showResults():
+    pollIdent = request.args.get("name")
+    return frontend.buildShowResults(pollIdent)
+
+@app.route('/pollinfoadmin')
+def showResults():
+    pollIdent = request.args.get("name")
+    return frontend.buildShowResults(pollIdent)
+
+
+###### API PATHS #######
 
 @app.route('/create')
 def postCreatePoll():
@@ -84,12 +110,18 @@ def voteInPoll():
 
     return "200 OK"
 
-@app.route('/results')
-def showResults():
-    pollIdent = request.args.get("name")
-    return frontend.buildShowResults(pollIdent)
+##### STATIC FILES #####
 
-@app.route('/providetoken')
+@app.route('/static/<path:path>')
+def staticFiles():
+    send_from_directory('static', path)
+
+if __name__ == "__main__":
+    db.init()
+    app.run(host='0.0.0.0')
+
+###### HELPER FUNCTIONS #########
+
 def multiplex():
     ident = arg("ident")
     if not ident:
@@ -105,11 +137,3 @@ def multiplex():
             return "302 vote ident token"
     else:
         return "404 ident unknown"
-
-@app.route('/static/<path:path>')
-def staticFiles():
-    send_from_directory('static', path)
-
-if __name__ == "__main__":
-    db.init()
-    app.run(host='0.0.0.0')

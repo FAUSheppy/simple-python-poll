@@ -14,6 +14,7 @@ button{
 hr{
     margin-top: 20px;
     border-color: black;
+    color: black;
 }
 
 span{
@@ -32,15 +33,12 @@ span{
 .main-container{
     background: orange;
 
-    height: 80%;
-
     max-width: 700px;
     min-width: 30%;
-
     margin-left: auto;
     margin-right: auto;
-    margin-top: 10%;
-    margin-bottom: 10%;
+    margin-top: 5%;
+    margin-bottom: 5%;
 
     padding: 40px;
 
@@ -64,13 +62,6 @@ input[type="checkbox"]{
 	cursor: pointer;
 }
 
-.main-title{
-    /* unused */
-}
-
-.single-token{
-    
-}
 
 .button-container {
     margin-top: 40px;
@@ -81,13 +72,6 @@ input[type="checkbox"]{
     margin-bottom: 40px;
     max-width: 100%;
     overflow-y: overlay;
-}
-
-/* vote page */
-.vote input{
-	float: right;
-	height: 25px;
-  	background-color: blue;
 }
 
 /* post-vote */
@@ -130,25 +114,24 @@ input[type="checkbox"]{
 .footer{
     text-align: center;
     font-weight: bold;
-    font-size: 25px;
+    font-size: 30px;
     position: fixed;
     width: 100%;
     background-color: grey;
     bottom: 0;
     left: 0;
-    height: 30px;
+    height: 35px;
 }
 
 .footerLink{
     margin-top: 0;
     padding-top: 0;
-    font-size: 12pt;
     text-decoration: none;
     color: black;
 }
 .mid{
     margin-right: 25%;
-    margin-left: 25%;
+    margin-left: 22%;
 }
 
 @media(max-width: 800px){
@@ -163,5 +146,42 @@ input[type="checkbox"]{
     .mid{
         margin-left: 2.5%;
         margin-right: 2.5%;
+    }
+    .main-container{
+        margin-top: 1%;
+        margin-bottom: 1%;
+    
+        padding: 2vw;
+        border-radius: 3vw;
+    }
+    .main-title{
+        font-size: 12vw;
+    }
+    
+    .tokenInput{
+        width: 50%;
+        font-size: 15vw;
+    }
+    
+    .go-button{
+        margin-top: 5vw;
+        height: 20vw;
+        width: 40vw;
+        font-size: 10vw;
+    }
+}
+@media(min-width: 800px){
+    .tokenInput{
+        width: 30%;
+        font-size: 40px;
+    }
+    .go-button{
+        margin-top: 30px;
+        height: 100px;
+        width: 300px;
+        font-size: 50px;
+    }
+    .main-title{
+        font-size: 60px;
     }
 }
