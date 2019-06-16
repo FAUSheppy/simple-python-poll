@@ -4,13 +4,6 @@ import os.path
 from utils.cpwrap import CFG
 import database.database as db
 
-
-def buildStartPage():
-    return html.startPage
-
-def buildCreatePoll(poll_name):
-    return html.pollCreator
-
 def buildPostCreatePoll(poll_name, tokens):
 
     # use HTML-header if there is one #

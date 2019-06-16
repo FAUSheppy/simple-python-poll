@@ -3,7 +3,7 @@ import flask
 
 from   utils.cpwrap      import CFG
 
-import utils.frontend    as frontend
+import utils.pollutils   as pollutils
 import database.database as db
 
 ###### HTML Snippets #########
@@ -81,6 +81,7 @@ def viewVote():
 @app.route('/viewresults')
 def viewResults():
     '''Show results for a poll'''
+    
     pollIdent  = flask.request.args.get("name")
 
     pollName    = db.getPollName(pollIdent)
@@ -90,14 +91,20 @@ def viewResults():
 
     footer = flask.Markup(flask.render_template("partials/footer.html"))
     header = flask.Markup(flask.render_template("partials/header.html"))
-    return flask.render("results.html", header=header, footer=footer, \
-                            pollName=pollName, question=pollQuestion, \
-                            totalVoteCount=count, voteOptions=voteOptions)
+    return flask.render_template("results.html", header=header, footer=footer, \
+                                    pollName=pollName, question=question, \
+                                    totalVoteCount=count, voteOptions=voteOptions
+                                    hostname=hostname, pollIdent=pollIdent)
 @app.route('/pollinfoadmin')
 def viewInfoAdmin():
     '''Page for managing polls'''
-    pollIdent = request.args.get("name")
-    return frontend.buildShowResults(pollIdent)
+    
+    pollIdent = flask.request.args.get("name")
+    
+
+    footer = flask.Markup(flask.render_template("partials/footer.html"))
+    header = flask.Markup(flask.render_template("partials/header.html"))
+    return flask.render_template("admin.html", footer=footer, header=header)
 
 
 ###### API PATHS #######
@@ -161,21 +168,3 @@ def staticFiles():
 if __name__ == "__main__":
     db.init()
     app.run(host='0.0.0.0')
-
-###### HELPER FUNCTIONS #########
-
-def multiplex():
-    ident = arg("ident")
-    if not ident:
-        return "403 BADIDENT"
-    elif db.checkPollExists(ident):
-        return "302 poll ident"
-    elif db.isValidAdmToken(ident):
-        return "302 adm ident"
-    elif db.isValidToken(ident):
-        if db.getVoteForToken(ident):
-            return "302 results ident token"
-        else:
-            return "302 vote ident token"
-    else:
-        return "404 ident unknown"
