@@ -1,8 +1,10 @@
 #!/usr/bin/python3
-from flask import Flask, request
-from cpwrap import CFG
-import frontend
-import database as db
+import flask
+
+from   utils.cpwrap      import CFG
+
+import utils.frontend    as frontend
+import database.database as db
 
 # # HTML Snippets ##
 tokenWrapper   = "<div class='single-token'>{}</div>"
@@ -19,11 +21,18 @@ pollHasNoTokens   = "<div class='main-container'><h1>Poll does not use tokens.</
 adminTokenInvalid = "<div class='main-container'><h1>Admin token invalid.</h1></div>"
 redirectTo = '<html><meta http-equiv="refresh" content="0"; url="{}"></html>'
 
-app = Flask(CFG("appName"))
+app = flask.Flask(CFG("appName"))
 
 @app.route('/')
 def rootPage():
-    return frontend.buildCreatePoll(getPollName())
+    footer = flask.Markup(flask.render_template("partials/footer.html"))
+    header = flask.Markup(flask.render_template("partials/header.html"))
+    return flask.render_template("startpage.html", header=header, footer=footer)
+
+@app.route("/viewcreate")
+def viewCreate():
+    '''This path displays a creation dialog for new poll'''
+    return flask.render_template("viewcreate.html")
 
 @app.route('/create')
 def postCreatePoll():
@@ -90,7 +99,7 @@ def multiplex():
     elif db.isValidAdmToken(ident):
         return "302 adm ident"
     elif db.isValidToken(ident):
-        if db.getVoteForToken(ident)
+        if db.getVoteForToken(ident):
             return "302 results ident token"
         else:
             return "302 vote ident token"

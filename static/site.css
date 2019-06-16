@@ -32,12 +32,15 @@ span{
 .main-container{
     background: orange;
 
+    height: 80%;
+
     max-width: 700px;
     min-width: 30%;
 
     margin-left: auto;
     margin-right: auto;
     margin-top: 10%;
+    margin-bottom: 10%;
 
     padding: 40px;
 
@@ -123,6 +126,7 @@ input[type="checkbox"]{
     width: 10%;
 }
 
+/* ######################## FOOTER ####################### */ 
 .footer{
     text-align: center;
     font-weight: bold;
@@ -133,7 +137,6 @@ input[type="checkbox"]{
     bottom: 0;
     left: 0;
     height: 30px;
-    
 }
 
 .footerLink{
@@ -146,4 +149,19 @@ input[type="checkbox"]{
 .mid{
     margin-right: 25%;
     margin-left: 25%;
+}
+
+@media(max-width: 800px){
+    .footer{
+        height: unset;
+    }
+
+    .footerLink{
+        font-size: 4vw;
+    }
+    
+    .mid{
+        margin-left: 2.5%;
+        margin-right: 2.5%;
+    }
 }
