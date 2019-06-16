@@ -2,16 +2,19 @@
     <head>
         <link rel="stylesheet" href=/site.css>
         <title>{{ websiteTitle }}</title>
+		{{ header }}
     </head>
     </body>
     <div class="main-container" id="main-container">
-            <div id="poll-name" class="poll-name-small">Poll: '{poll_name}' - <b>{info}</b></div>
+            <div id="poll-name" class="poll-name-small">
+				Poll: '{{ pollName }}' - <b>{{ pollType }}</b>
+			</div>
         <div class="question-title">{question}</div>
     	<div class="options-container vote" id="vote-options-container">
-            {voteoptions}
+            {{ voteOptions }}
     	</div>
         <div id="token-container">
-            {tokenInput}
+            {{ tokenInput }}
         </div>
         <hr>
     	<div id="button-container">

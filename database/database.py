@@ -110,7 +110,24 @@ def pollNameFromToken(token):
     closeDB(conn)
     return answer
 
+def getPollName(ident):
+    return "TODOpollname"
 
+def getPollType(ident):
+    return "TODOpolltype"
+
+def getPollQuestion(ident):
+    return "TODOpollquestion"
+
+def getPollOptionCounts(ident):
+    return [1,3,4]
+
+def getPollStartingTokens(ident):
+    return ["lol","lol"]
+
+def getPollAdmToken(ident):
+    return "admtoken"
+    
 def checkTokenNeeded(cursor, poll_name):
     req = "SELECT has_tokens FROM {} WHERE name=?".format(CFG("poll_table_name"))
     return queryOne(cursor, req, (poll_name,)) == 1
@@ -262,7 +279,7 @@ def createPoll(options_arr, question, has_tokens, multi, openresults=True):
     closeDB(conn)
     return poll_name
 
-def getOptions(poll_name):
+def getVoteOptions(poll_name):
     conn, c = connectDB()
     req = "SELECT options FROM {} WHERE name=?".format(CFG("poll_table_name"))
     options_str = queryOne(c, req, (poll_name,))

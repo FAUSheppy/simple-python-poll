@@ -41,19 +41,61 @@ def tokenInputView():
 @app.route("/viewcreate")
 def viewCreate():
     '''This path displays a creation dialog for new poll'''
+    footer = flask.Markup(flask.render_template("partials/footer.html"))
+    header = flask.Markup(flask.render_template("partials/header.html"))
     return flask.render_template("viewcreate.html")
+
+@app.route('/viewpostcreate')
+def viewPostCreate():
+    '''Page for managing polls'''
+    pollIdent  = flask.request.args.get("name")
+
+    pollName    = db.getPollName(pollIdent)
+    voteOptions = db.getVoteOptions(pollIdent)
+    question    = db.getPollQuestion(pollIdent)
+    tokens      = db.getPollStartingTokens(pollIdent)
+    admToken    = db.getPollAdmToken(pollIdent)
+
+    footer = flask.Markup(flask.render_template("partials/footer.html"))
+    header = flask.Markup(flask.render_template("partials/header.html"))
+    return flask.render_template("postcreate.html", header=header, footer=footer,
+                                    pollName=pollName, tokens=tokens, admToken=admToken)
 
 @app.route("/viewvote")
 def viewVote():
-    return "OK"
+    '''This path displays the actual options to vote'''
+    
+    inputToken = flask.request.args.get("token")
+    pollIdent  = flask.request.args.get("name")
+
+    pollName    = db.getPollName(pollIdent)
+    pollType    = db.getPollType(pollIdent)
+    voteOptions = db.getVoteOptions(pollIdent)
+
+    footer = flask.Markup(flask.render_template("partials/footer.html"))
+    header = flask.Markup(flask.render_template("partials/header.html"))
+    return flask.render_template("vote.html", header=header, footer=footer, \
+                                    pollName=pollName, pollType=pollType, \
+                                    voteOptions=voteOptions, tokenInput=tokenInput)
 
 @app.route('/viewresults')
-def showResults():
-    pollIdent = request.args.get("name")
-    return frontend.buildShowResults(pollIdent)
+def viewResults():
+    '''Show results for a poll'''
+    pollIdent  = flask.request.args.get("name")
 
+    pollName    = db.getPollName(pollIdent)
+    voteOptions = db.getVoteOptions(pollIdent)
+    question    = db.getPollQuestion(pollIdent)
+    count       = sum(db.getPollOptionCounts(pollIdent))
+
+    footer = flask.Markup(flask.render_template("partials/footer.html"))
+    header = flask.Markup(flask.render_template("partials/header.html"))
+    return flask.render("results.html", header=header, footer=footer, \
+                            pollName=pollName, question=pollQuestion, \
+                            totalVoteCount=count, voteOptions=voteOptions)
 @app.route('/pollinfoadmin')
-def showResults():
+def viewInfoAdmin():
+    '''Page for managing polls'''
     pollIdent = request.args.get("name")
     return frontend.buildShowResults(pollIdent)
 

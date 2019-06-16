@@ -2,6 +2,7 @@
   <head>
       <link rel="stylesheet" href=/site.css>
       <title>{{ websiteTitle }}</title>
+      {{ header }}
   </head>
   <body>
       <div class="main-container" id="main-container">
@@ -12,7 +13,7 @@
                 <div class="single-result-name">  {{ name }}     </div>
                 <div class="single-result-ratio">
                     <div class="percentage-bar" style="width: {width};">
-                        {{ ratio }}
+                            {{ absolute }}
                     </div>
                 </div>
                 <div class="single-result-abs"> {{ absolute }} </div>
