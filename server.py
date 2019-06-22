@@ -205,14 +205,14 @@ def voteInPoll():
         raise AssertionError("PollIdent returned fron token doesn't exist")
 
     # check if auth need and/or valid #
-    if not db.checkTokenValid(pollIdent, token):
-        return "401 TOKEN INVALID"
+    if not db.checkTokenValid(pollIdent, token) and db.tokenNeededExternal(pollIdent):
+        return ("401 TOKEN INVALID", 403)
     
     # register vote #
     db.voteInPoll(pollIdent, options, token)
 
     # ack #
-    return "200 OK"
+    return ("OK", 200)
 
 ##### STATIC FILES #####
 

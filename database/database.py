@@ -169,11 +169,10 @@ def voteInPoll(pollIdent, options, token="DUMMY_INVALID_TOKEN"):
     if type(options) != list:
         options = [options]
 
-    # if token already has a vote undo it #
-    tokenUndoVote(pollIdent, options, token)
-
-    # remember answer for token #
-    markTokenUsedExternal(pollIdent, token, ",".join(options))
+    # handle tokens #
+    if tokenNeededExternal(pollIdent):
+        tokenUndoVote(pollIdent, options, token)
+        markTokenUsedExternal(pollIdent, token, ",".join(options))
 
     # increment relevant options #
     for opt in options:
