@@ -1,0 +1,35 @@
+<html>
+    <head>
+		{{ header }}
+        <link rel="stylesheet" href=/static/site.css>
+        <link rel="stylesheet" href=/static/viewcreate.css>
+        <script src="/static/viewvote.js"></script>
+    </head>
+    </body>
+    <div class="main-container" id="main-container">
+            <div id="poll-name" class="poll-name-small">
+				Poll: '{{ pollName }}' - <b>{{ pollType }}</b>
+			</div>
+        <div class="question-title">{{ question }}?</div>
+    	<div class="options-container vote" id="vote-options-container">
+        {% for opt in voteOptions %}
+        <span>
+            <input class="vote-option" type="checkbox" id={{ opt }}>
+            <div class="text-wrapper">
+                {{ opt }}
+            </div>
+        </span>
+        {% endfor %}
+    	</div>
+        <div class="vote-token-field" id="token-container">
+            {{ tokenInput }}
+        </div>
+        <hr>
+    	<div id="button-container" class="button-container triple-button">
+            <button class="small" onclick="showResults()">Results</button>
+    		<button class="small" onclick="submit()">Submit</button>
+    		<button class="small" onclick="cancel()">Cancel</button>
+    	</div>
+    </div>
+    {{ footer }}
+</html>

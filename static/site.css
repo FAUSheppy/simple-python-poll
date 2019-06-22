@@ -7,21 +7,33 @@ button{
     background-color: red;
     border-color: red;
     color: #583535;
-    font-size: 20;
+    font-size: 50;
+    padding: 10px;
+    margin-left: 20px;
+    margin-right: 20px;
     font-weight: bold;
 }
 
 hr{
     margin-top: 20px;
     border-color: black;
+    color: black;
 }
 
 span{
     margin-top: 5px;
     width: 100%;
     display: inline-block;
-	line-height: 40px; /* 75% of height */
-    font-size: 20;
+    font-size: 50px;
+    text-align: left;
+}
+
+.text-wrapper{
+    word-wrap: break-word;
+}
+
+.link-container{
+    margin-top: 40px;
 }
 
 .poll-name-small{
@@ -34,10 +46,10 @@ span{
 
     max-width: 700px;
     min-width: 30%;
-
     margin-left: auto;
     margin-right: auto;
-    margin-top: 10%;
+    margin-top: 5%;
+    margin-bottom: 5%;
 
     padding: 40px;
 
@@ -52,22 +64,21 @@ span{
 }
 
 input[type="checkbox"]{
-	width: 40px; /*Desired width*/
-	height: 40px; /*Desired height*/
+	width: 80px;
+	height: 80px;
 
 	background: grey;
 	border-radius: 10px;	
 	
 	cursor: pointer;
+    float: right;
 }
 
-.main-title{
-    /* unused */
+.tokenInput{
+    font-size: 50px;
+    max-width: 70%;
 }
 
-.single-token{
-    
-}
 
 .button-container {
     margin-top: 40px;
@@ -80,11 +91,10 @@ input[type="checkbox"]{
     overflow-y: overlay;
 }
 
-/* vote page */
-.vote input{
-	float: right;
-	height: 25px;
-  	background-color: blue;
+.small{
+    max-width: 30%;
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
 /* post-vote */
@@ -104,18 +114,20 @@ input[type="checkbox"]{
 }
 .single-result-name{
     float: left;
-    width: 20%;
+    width: 30%;
+    word-wrap: break-word;
 }
 
 .single-result-ratio{
     float: left;
     margin-left: 20px;
-    width: 60%;
+    width: 50%;
 }
 
 .percentage-bar{
     background: rgba(255,25,0,0.5);
     padding-left: 10px;
+    height: auto;
 }
 
 .single-result-abs{
@@ -123,29 +135,138 @@ input[type="checkbox"]{
     width: 10%;
 }
 
+/* ######################## FOOTER ####################### */ 
 .footer{
     text-align: center;
     font-weight: bold;
-    font-size: 25px;
+    font-size: 30px;
     position: fixed;
-    width: 100%;
+    width: 90%;
+    padding-left: 5%;
+    padding-right: 5%;
     background-color: grey;
     bottom: 0;
     left: 0;
-    height: 30px;
-    
+    height: 35px;
 }
 
 .footerLink{
     margin-top: 0;
     padding-top: 0;
-    font-size: 12pt;
     text-decoration: none;
     color: black;
 }
-.mid{
-    margin-right: 25%;
-    margin-left: 25%;
+.mid-footer{
+}
+.left-footer{
+    float: left;
+}
+.right-footer{
+    float: right;
+}
+.question-title{
+    word-wrap: break-word;
+    font-size: 40px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.vote-token-field{
+    font-size: 40px;
+}
+
+@media(max-width: 1200px){
+    .footer{
+        height: unset;
+    }
+
+    .footerLink{
+        font-size: 4vw;
+    }
+    
+    .mid{
+        margin-left: 2.5%;
+        margin-right: 2.5%;
+    }
+    .main-container{
+        margin-top: 1%;
+        margin-bottom: 1%;
+    
+        padding: 2vw;
+        border-radius: 3vw;
+
+        min-width: 250px;
+    }
+    .main-title{
+        font-size: 12vw;
+    }
+    
+    .question-title{
+        font-size: 10vw;
+        margin-top: 3vw;
+        margin-bottom: 3vw;
+    }
+    .tokenInput{
+        width: 60%;
+        font-size: 15vw;
+    }
+
+    .token-container{
+        font-size: 10vw;
+    }
+    
+    .go-button{
+        height: 15vw;
+        width: 30%;
+        float: right;
+        margin-top: 1.5vw;
+        font-size: 8vw;
+    }
+
+    .main-title{
+        font-size: 60px;
+    }
+
+    .link-field{
+        font-size: 6vw;   
+    }
+    .link-container{
+        margin-top: unset;
+        font-size: 8vw;
+        text-align: left;
+    }
+    .adm-token-container{
+        margin-top: 3vw;
+        font-size: 6vw;
+    }
+
+    .small{
+        margin-left: 1vw;
+        margin-right: 1vw;
+        font-size: 7vw;
+    }
+    button{
+        margin-left: 1vw;
+        margin-right: 1vw;
+    }
+    .text-wrapper{
+        max-width: 70%;    
+    }
+    .vote-token-field{
+        font-size: 6vw;
+        max-width: 60%;
+    }
+    .single-result-name{
+        float: left;
+        width: 30%;
+        font-size: 5vw;
+        word-wrap: break-word;
+    }
+    .single-result-ratio{
+        float: left;
+        margin-left: 20px;
+        width: 50%;
+        margin-bottom: 2vw;
+    }
 }
 
 @media(max-width: 600px){

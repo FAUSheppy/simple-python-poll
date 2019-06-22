@@ -1,0 +1,33 @@
+<html>
+  <head>
+      <link rel="stylesheet" href=/static/site.css>
+      <link rel="stylesheet" href=/static/startpage.css>
+        {{ header }}
+  </head>
+  </body>
+    <div class=splitContainer>
+	    <a href="/tokeninputview" id=left class="split left">
+            <div class=verticalCenter>
+	    	    <div class=option>Use Token</div>
+                <div class=subOption>
+                    <hr>
+                    <br>
+                    Enter a token to vote in a poll, show results or access a poll-admin page
+                </div>
+            </div>
+	    </a>
+	    
+	    <a href="/viewcreate" id=right class="split right">
+            <div class=verticalCenter>
+	    	    <div class=option>Create Poll</div>
+                <div class=subOption>
+                    <hr>
+                    <br>
+                    Create a new poll
+                </div>
+            </div>
+	    </a>
+    </div>
+    {{ footer }}
+  </body>
+</html>
