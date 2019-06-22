@@ -3,19 +3,19 @@ function cancel(){
 }
 
 function submit(){
-    options  = document.getElementsByClassName("vote-option")
-    token    = document.getElementById("token-field")
-    multi    = true
-    if(token){
-        token = token.value
-    }else{
-        token = "none"
-    }
-    var url = new URL(window.location.href)
-    pollname = url.searchParams.get("ident")
-    if(pollname == null){
-        pollname = document.getElementById("poll-ident").className
-    }
+  options  = document.getElementsByClassName("vote-option")
+  token    = document.getElementById("token-field")
+  multi    = true
+  if(token){
+      token = token.value
+  }else{
+      token = "none"
+  }
+  var url = new URL(window.location.href)
+  pollname = url.searchParams.get("ident")
+  if(pollname == null){
+      pollname = document.getElementById("poll-ident").className
+  }
 	optString = ""
     count = 0
 	for(x in options){
@@ -28,17 +28,17 @@ function submit(){
 		}
 	}
 
-    /* check if at least one selcted */
-    if(count == 0){
-        alert("Must select at least one option")
-        return
-    }
+  /* check if at least one selcted */
+  if(count == 0){
+      alert("Must select at least one option")
+      return
+  }
 
-    /* check if multi choice */
-    if(count > 1 && !multi){
-        alert("Can only select ONE option!")
-        return
-    }
+  /* check if multi choice */
+  if(count > 1 && !multi){
+      alert("Can only select ONE option!")
+      return
+  }
 	var xhttp = new XMLHttpRequest();
 	xhttp.onload = function() {
 		if (xhttp.status == 200) {
@@ -47,10 +47,10 @@ function submit(){
             alert("Token rejected")
     	}
 	};
-    requestURL = window.location.origin + "/vote" + "?" 
-										+ "ident=" + pollname
-                                    	+ "&token=" + token
-                                    	+ "&selected=" + optString
+  requestURL = window.location.origin + "/vote" + "?" 
+									                  + "ident=" + pollname
+                                  	+ "&token=" + token
+                                  	+ "&selected=" + optString
 	xhttp.open("GET", requestURL, true);
 	xhttp.send();
 }
