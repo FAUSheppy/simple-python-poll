@@ -21,9 +21,11 @@
         </span>
         {% endfor %}
     	</div>
+        {% if tokenNeeded %}
         <div class="vote-token-field" id="token-container">
             {{ tokenInput }}
         </div>
+        {% endif %}
         <hr>
     	<div id="button-container" class="button-container triple-button">
             <button class="small" onclick="showResults()">Results</button>

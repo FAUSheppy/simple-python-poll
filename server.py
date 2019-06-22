@@ -94,6 +94,7 @@ def viewVote():
     return flask.render_template("viewvote.html", header=header, footer=footer, \
                                     pollName=pollIdent, pollType=pollType, \
                                     question=question, \
+                                    tokenNeeded=db.tokenNeededExternal(pollIdent), \
                                     voteOptions=voteOptions, tokenInput=tokenField)
 
 @app.route('/viewresults')
