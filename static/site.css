@@ -201,7 +201,7 @@ input[type="checkbox"]{
         min-width: 250px;
     }
     .main-title{
-        font-size: 12vw;
+        font-size: 6vw;
     }
     
     .question-title{
@@ -224,10 +224,6 @@ input[type="checkbox"]{
         float: right;
         margin-top: 1.5vw;
         font-size: 8vw;
-    }
-
-    .main-title{
-        font-size: 60px;
     }
 
     .link-field{
