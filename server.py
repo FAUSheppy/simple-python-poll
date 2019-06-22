@@ -193,7 +193,6 @@ def voteInPoll():
     # check if multiple #
     if "," in options:
         options = list(filter(lambda x: x, options.split(",")))
-        print(db.isMultiChoice(pollIdent))
         if len(options) > 1 and not db.isMultiChoice(pollIdent):
             raise ValueError("Cannot have more than one option in multiple choice")
     
