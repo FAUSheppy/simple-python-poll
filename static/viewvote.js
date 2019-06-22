@@ -5,7 +5,8 @@ function cancel(){
 function submit(){
   options  = document.getElementsByClassName("vote-option")
   token    = document.getElementById("token-field")
-  multi    = true
+  multi    = document.getElementById("pollType").innerText == "MULTIPLE CHOICE"
+
   if(token){
       token = token.value
   }else{
