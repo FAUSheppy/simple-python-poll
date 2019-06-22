@@ -44,6 +44,7 @@ def viewCreate():
     header = flask.Markup(flask.render_template("partials/header.html"))
     return flask.render_template("viewcreate.html", header=header, footer=footer)
 
+@app.route('/pollinfoadmin')
 @app.route('/viewpostcreate')
 def viewPostCreate():
     '''Page for managing polls'''
@@ -111,16 +112,17 @@ def viewResults():
                                     question=question, \
                                     totalCount=count, \
                                     optionsCountTupel=zip(voteOptions, optionCounts))
-@app.route('/pollinfoadmin')
-def viewInfoAdmin():
-    '''Page for managing polls'''
-    
-    pollIdent = flask.request.args.get("name")
-    
 
-    footer = flask.Markup(flask.render_template("partials/footer.html"))
-    header = flask.Markup(flask.render_template("partials/header.html"))
-    return flask.render_template("admin.html", footer=footer, header=header)
+#@app.route('/pollinfoadmin')
+#def viewInfoAdmin():
+#    '''Page for managing polls'''
+#    
+#    pollIdent = flask.request.args.get("name")
+#    
+#
+#    footer = flask.Markup(flask.render_template("partials/footer.html"))
+#    header = flask.Markup(flask.render_template("partials/header.html"))
+#    return flask.render_template("admin.html", footer=footer, header=header)
 
 
 ###### API PATHS #######
@@ -136,6 +138,9 @@ def createPoll():
     question  = flask.request.args.get("q").strip()
 
     question = question.rstrip("?")
+
+    # prevent identical options #
+    options = ",".join(set(options.split(",")))
 
     # create poll in database #
     pollIdent, admToken = db.createPoll(options, question, useTokens, multi)
