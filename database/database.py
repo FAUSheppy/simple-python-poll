@@ -145,9 +145,6 @@ def decrementOption(cursor, pollIdent, option):
 def isMultiChoice(pollIdent):
     conn, c = connectDB()
     req = "SELECT multi FROM {} WHERE name=?".format(CFG("poll_table_name"))
-    print(pollIdent)
-    print(type(queryOne(c, req, (pollIdent,))))
-    #  TODO WTF IS GOING ON HERE
     ret = queryOne(c, req, (pollIdent,)) == 1
     closeDB(conn)
     return ret
@@ -157,7 +154,6 @@ def tokenUndoVote(pollIdent, options, token):
     tname = CFG("tokens_table_name")
     req = "SELECT options_selected FROM {} WHERE token=? AND name=?".format(tname)
     ret = queryOne(c, req, (token, pollIdent))
-    print(ret)
     if ret == "NONE":
         return
     else:
@@ -190,7 +186,6 @@ def getPollOptionCounts(ident):
     optionCounts = []
 
     for opt in options:
-        print(opt)
         optionCounts += [getOptionCount(ident, opt)]
 
     return optionCounts

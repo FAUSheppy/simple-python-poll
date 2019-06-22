@@ -24,6 +24,13 @@ app = flask.Flask(CFG("appName"))
 
 ##### FRONTEND PATHS ########
 
+def getHostname():
+    # check for header (reverse proxy support or use request host otherwise #
+    hostname  = flask.request.headers.get("X-REAL-HOSTNAME")
+    if not hostname:
+        hostname  = flask.request.url_root
+    return hostname
+
 @app.route('/')
 def rootPage():
     footer = flask.Markup(flask.render_template("partials/footer.html"))
@@ -52,14 +59,10 @@ def viewPostCreate():
     pollIdent = flask.request.args.get("pollIdent")
     admToken  = flask.request.args.get("admToken")
     
-    # check for header (reverse proxy support or use request host otherwise #
-    hostname  = flask.request.headers.get("X-REAL-HOSTNAME")
-    if not hostname:
-        hostname  = flask.request.url_root
-
     voteOptions = db.getVoteOptions(pollIdent)
     question    = db.getPollQuestion(pollIdent)
     tokens      = db.getTokensExternal(pollIdent)
+    hostname    = getHostname()
 
     footer = flask.Markup(flask.render_template("partials/footer.html"))
     header = flask.Markup(flask.render_template("partials/header.html"))
@@ -169,13 +172,16 @@ def tokenQuery():
     '''This path is intended to be called from javascript'''
 
     # parse arguments #
-    pollIdent = request.args.get("name")
-    admtoken  = arg("admtoken")
+    pollIdent = flask.request.args.get("ident")
+    admtoken  = flask.request.args.get("admToken")
+    hostname  = getHostname()
 
-    if not db.checkAdmTokenValid(admtoken):
+    if not db.checkAdmTokenValid(pollIdent, admtoken):
         return "401 ADMTOKENINVALID"
 
-    return db.genTokensExternal(pollIdent, count=1)
+    return "{host}viewvote?token={token}&ident={ident}".format( \
+                                    token=db.genTokensExternal(pollIdent, count=1)[0], \
+                                    ident=pollIdent, host=hostname)
 
 @app.route('/vote')
 def voteInPoll():

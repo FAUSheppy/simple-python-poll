@@ -97,6 +97,10 @@ input[type="checkbox"]{
     margin-right: 10px;
 }
 
+.stretched{
+    max-width: unset !important;
+}
+
 /* post-vote */
 .link-field{
     margin-top: 20px;
