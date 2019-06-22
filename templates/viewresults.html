@@ -1,0 +1,38 @@
+<html>
+  <head>
+      {{ header }}
+      <link rel="stylesheet" href=/static/site.css>
+      <link rel="stylesheet" href=/static/viewcreate.css>
+  </head>
+  <body>
+      <div class="main-container" id="main-container">
+        <div id="poll-name" class="poll-name-small">Poll: '{{ pollName }}' - {{ pollType }}</div>
+        <div class="question-title">{{ question }}?</div>
+		<hr>
+      	<div class="results-container" id="vote-options-container">
+            {% for optTupel in optionsCountTupel %}
+            <span>
+                <div class="single-result-name"> {{ optTupel[0] }} </div>
+                <div class="single-result-ratio">
+                    {% if totalCount == 0 %}
+					    {% set percentage = "0" %}
+                    {% else %}
+					    {% set percentage = "{:.1f}".format(optTupel[1]/totalCount*100, 1) %}
+                    {% endif %}
+                    <div class="percentage-bar" style="width: {{ percentage }}%;">
+						{{ percentage }}%
+                    </div>
+                </div>
+                <div class="single-result-abs">{{ optTupel[1] }}</div>
+            </span>
+            {% endfor %}
+      	</div>
+      	<div id="button-container">
+            <button class=small onClick="window.location.href = window.location.origin">
+                    Home
+            </button>
+      	</div>
+      </div>
+      {{ footer }}
+  </body>
+</html>

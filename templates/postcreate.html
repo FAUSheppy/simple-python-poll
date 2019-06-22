@@ -1,0 +1,48 @@
+<html>
+<head>
+    {{ header }}
+    <link rel="stylesheet" href=/static/site.css>
+    <link rel="stylesheet" href=/static/viewcreate.css>
+</head>
+</body>
+    <div class="main-container" id="main-container">
+        <div class="main-title" ><i>Poll created!</i></div>
+        <div class="link-container">
+            <hr>
+
+            Vote-Link:
+            <input class="link-field" type=text
+                value={{ hostname }}viewvote?ident={{ pollIdent }}>
+            </input>
+            <hr>
+
+            Results-Link: 
+            <input class="link-field" type=text
+                value={{ hostname }}results?ident={{ pollIdent }}>
+            </input>
+            <hr>
+
+            Tokens-Link: 
+            <input class="link-field" type=text
+                   value={{ hostname }}pollinfoadmin?ident={{ pollIdent }}
+            </input>
+        </div>
+        {% if tokens %}
+        <hr>
+        <div class="token-container">
+            {% for tk in tokens %}
+                {{ tk }}<br>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <hr>
+        <div class=adm-token-container>
+            Admin Access Token: <i>{{ admToken }}</i>
+        </div>
+    	<div class="button-container" id="button-container">
+            <button onClick="window.location.href = window.location.origin">Main Page</button>
+    	</div>
+    </div>
+    {{ footer }}
+</body>
+</html>

@@ -1,0 +1,61 @@
+/* general */
+@media(max-width: 1200px){
+    body{
+        margin: 0;
+        background: orange;
+    }
+    span{
+        font-size: 8vw;
+        text-align: left;
+    }
+    input[type="checkbox"] {
+        height: 20vw;
+        width: 20vw;
+    }
+    button{
+        font-size: 12vw;
+        margin-right: 2vw;
+        margin-left: 2vw;
+        padding: 1vw;
+    }
+    .button-container{
+        margin-top: 8vw;
+    }
+    .vote-option{
+        float: right;
+    }
+    .main-title{
+        text-align: left;
+    }
+    .options-container{
+        font-size: 10vw;   
+    }
+    .option-input{
+        font-size: 10vw;
+        max-width: 98%;
+        margin-left: 1%;
+        margin-right: 1%;
+        margin-top: 1vw;
+        margin-bottom: 1vw;
+    }
+    .main-container{
+        background: orange;
+
+        max-width: unset; 
+        border-radius: unset;
+        margin: unset;
+    
+        width: 95%;
+        min-height: 100%;
+        display: block;
+        text-align: center;
+    
+        font-size: 25;
+        font-weight: bold;
+        color: #68553d;
+    }
+    .footer{
+        position: relative;
+        margin-top: 2vw;
+    }
+}
