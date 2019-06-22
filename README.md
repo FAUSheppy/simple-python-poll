@@ -17,6 +17,7 @@ If you are running the server behind a reverse proxy you must set a *X-REAL-HOST
 * changing vote when using tokens
 
 # Pictures
+[LiveDemo](https://simplepoll.de)
 ![Creation](https://media.atlantishq.de/pollCreate.png)
 ![Voting](https://media.atlantishq.de/pollVote.png)
 ![Results](https://media.atlantishq.de/pollResults.png)
