@@ -3,10 +3,11 @@
     {{ header }}
     <link rel="stylesheet" href=/static/site.css>
     <link rel="stylesheet" href=/static/viewcreate.css>
+    <script src="/static/postcreate.js" defer></script>
 </head>
 </body>
     <div class="main-container" id="main-container">
-        <div class="main-title" ><i>Poll created!</i></div>
+        <div class="main-title" ><i>Poll created!</i> - <i id=pollIdent>{{ pollIdent }}</div>
         <div class="link-container">
             <hr>
 
@@ -22,10 +23,12 @@
             </input>
             <hr>
 
-            Tokens-Link: 
-            <input class="link-field" type=text
-                   value={{ hostname }}pollinfoadmin?ident={{ pollIdent }}
+            {% if tokens %}
+            <button class="small stretched" onClick="newTokenLink()">New vote-link w. Token</button>
+            <input id=voteTokenLink class="link-field" type=text
+                   value=""
             </input>
+            {% endif %}
         </div>
         {% if tokens %}
         <hr>
@@ -37,7 +40,7 @@
         {% endif %}
         <hr>
         <div class=adm-token-container>
-            Admin Access Token: <i>{{ admToken }}</i>
+            Admin Access Token: <i id=admToken>{{ admToken }}</i>
         </div>
     	<div class="button-container" id="button-container">
             <button onClick="window.location.href = window.location.origin">Main Page</button>
