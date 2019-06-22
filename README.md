@@ -5,6 +5,8 @@ Many existing solution use a massive amount of third-party CSS and JavaScript, t
 
 This software is therefore intended to be an easy deployable, minnimum feature alternative to more complex solutions like [LimeSurvey](https://www.limesurvey.org).
 
+A live-demo can be found on [simplepoll.de](https://simplepoll.de).
+
 # Running behind a reverse proxy
 If you are running the server behind a reverse proxy you must set a *X-REAL-HOSTNAME*-header with the correct hostname. In nginx that would be:
 
@@ -17,7 +19,6 @@ If you are running the server behind a reverse proxy you must set a *X-REAL-HOST
 * changing vote when using tokens
 
 # Pictures
-[LiveDemo](https://simplepoll.de)
 ![Creation](https://media.atlantishq.de/pollCreate.png)
 ![Voting](https://media.atlantishq.de/pollVote.png)
 ![Results](https://media.atlantishq.de/pollResults.png)
