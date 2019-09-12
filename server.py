@@ -34,21 +34,21 @@ def getHostname():
 @app.route('/')
 def rootPage():
     footer = flask.Markup(flask.render_template("partials/footer.html"))
-    header = flask.Markup(flask.render_template("partials/header.html"))
+    header = flask.Markup(flask.render_template("partials/header.html", websiteTitle="SimplePoll"))
     return flask.render_template("startpage.html", header=header, footer=footer)
 
 @app.route("/tokeninputview")
 def tokenInputView():
     '''This path displays a creation dialog for new poll'''
     footer = flask.Markup(flask.render_template("partials/footer.html"))
-    header = flask.Markup(flask.render_template("partials/header.html"))
+    header = flask.Markup(flask.render_template("partials/header.html", websiteTitle="Token"))
     return flask.render_template("stringinput.html", header=header, footer=footer)
 
 @app.route("/viewcreate")
 def viewCreate():
     '''This path displays a creation dialog for new poll'''
     footer = flask.Markup(flask.render_template("partials/footer.html"))
-    header = flask.Markup(flask.render_template("partials/header.html"))
+    header = flask.Markup(flask.render_template("partials/header.html", websiteTitle="Create"))
     return flask.render_template("viewcreate.html", header=header, footer=footer)
 
 @app.route('/pollinfoadmin')
@@ -65,7 +65,7 @@ def viewPostCreate():
     hostname    = getHostname()
 
     footer = flask.Markup(flask.render_template("partials/footer.html"))
-    header = flask.Markup(flask.render_template("partials/header.html"))
+    header = flask.Markup(flask.render_template("partials/header.html", websiteTitle="SimplePoll"))
     return flask.render_template("postcreate.html", header=header, footer=footer, \
                                     pollName=question, tokens=tokens, admToken=admToken, \
                                     pollIdent=pollIdent, hostname=hostname)
@@ -88,7 +88,7 @@ def viewVote():
     question    = db.queryQuestion(pollIdent)
 
     footer      = flask.Markup(flask.render_template("partials/footer.html"))
-    header      = flask.Markup(flask.render_template("partials/header.html"))
+    header      = flask.Markup(flask.render_template("partials/header.html", websiteTitle="Vote"))
     tokenField  = flask.Markup(tokenInput.format(token=token))
 
     return flask.render_template("viewvote.html", header=header, footer=footer, \
@@ -109,7 +109,7 @@ def viewResults():
     count        = sum(optionCounts)
 
     footer = flask.Markup(flask.render_template("partials/footer.html"))
-    header = flask.Markup(flask.render_template("partials/header.html"))
+    header = flask.Markup(flask.render_template("partials/header.html", websiteTitle="Results"))
     return flask.render_template("viewresults.html", header=header, footer=footer, \
                                     pollType=pollType, \
                                     pollName=pollIdent, \
