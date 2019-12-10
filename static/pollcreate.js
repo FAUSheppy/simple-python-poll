@@ -3,28 +3,28 @@ var pollNameInput = document.getElementById('poll-name-input')
 var question = document.getElementById('question-input')
 
 function cancel(){
-	window.location.replace(window.location.origin);
+    window.location.replace(window.location.origin);
 }
 
 function createButton(){
-	options = document.getElementsByClassName("option")
-	optString = ""
+    options = document.getElementsByClassName("option")
+    optString = ""
     count = 0
-	for(x in options){
+    for(x in options){
         
         /* exclude question */
         if(options[x].id == "question-input"){
             continue
         }
 
-		if(options[x].value){
-			if(optString != ""){
-				optString += ","
-			}
-			optString += options[x].value
+        if(options[x].value){
+            if(optString != ""){
+                optString += ","
+            }
+            optString += options[x].value
             count++;
-		}
-	}
+        }
+    }
 
     console.log(optString)
 
@@ -50,37 +50,37 @@ function createButton(){
         multiChoiceVar = 1
     }
 
-	requestURL = window.location.origin + "/create?"
+    requestURL = window.location.origin + "/create?"
                     + "&options=" + optString
                     + "&" + "tokens=" + token 
                     + "&" + "multi=" + multiChoiceVar
                     + "&" + "q=" + question
 
     /* request new poll */
-	var xhttp = new XMLHttpRequest();
-	xhttp.onreadystatechange = function() {
-	    if (this.readyState == 4 && this.status == 200) {
-	        var pollIdent = xhttp.responseText.split(",")[0]
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            var pollIdent = xhttp.responseText.split(",")[0]
             var admToken  = xhttp.responseText.split(",")[1]
             window.location.href = window.location.origin + "/viewpostcreate?"
                                                           + "pollIdent=" + pollIdent 
                                                           + "&admToken=" + admToken
-	    }
-	};
-	xhttp.open("GET", requestURL, true);
-	xhttp.send();
+        }
+    };
+    xhttp.open("GET", requestURL, true);
+    xhttp.send();
 
     console.log(requestURL)
 }
 
 function extend(){
-	var span = document.createElement('span')
+    var span = document.createElement('span')
     span.innerText = "Answer: "
-	var inputForm = document.createElement("input")
-	inputForm.setAttribute("type", "text")
-	inputForm.setAttribute("class", "option-input option")
-	span.appendChild(inputForm)
-	var element = document.getElementById("options-container")
+    var inputForm = document.createElement("input")
+    inputForm.setAttribute("type", "text")
+    inputForm.setAttribute("class", "option-input option")
+    span.appendChild(inputForm)
+    var element = document.getElementById("options-container")
     element.appendChild(span)
 }
 
