@@ -138,6 +138,7 @@ input[type="checkbox"]{
 }
 
 .single-result-abs{
+    font-size: 30px;
     float: right;
     width: 10%;
 }
