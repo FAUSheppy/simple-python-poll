@@ -74,15 +74,12 @@ function createButton(){
 }
 
 function extend(){
-    var span = document.createElement('span')
-    span.innerText = "Answer: "
-    var inputForm = document.createElement("input")
-    inputForm.setAttribute("type", "text")
-    inputForm.setAttribute("class", "option-input option")
-    span.appendChild(inputForm)
-    var element = document.getElementById("options-container")
-    element.appendChild(span)
-}
+    var optionsContainer = document.getElementById("options-container")
+    var inputForm        = document.createElement("input")
 
-//TODO create pollname
-//TODO add options
+    inputForm.setAttribute("type",        "text")
+    inputForm.setAttribute("class",       "option-input option")
+    inputForm.setAttribute("placeholder", "Enter poll option..")
+
+    optionsContainer.appendChild(inputForm)
+}
