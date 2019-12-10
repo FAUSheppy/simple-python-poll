@@ -9,15 +9,16 @@ function newTokenLink(nocopy=false){
         var voteTokenLinkField = document.getElementById("voteTokenLink")
 
         xhttp.onload = function() {
-                if (xhttp.status == 200) {
-                    voteTokenLinkField.value = xhttp.responseText
-            if(!nocopy){
-                /* Select the text field */
-                voteTokenLinkField.select();
-                /* Copy the text inside the text field */
-                document.execCommand("copy");
-            }
+            if (xhttp.status == 200 && voteTokenLinkField != null) {
+                voteTokenLinkField.value = xhttp.responseText
+
+                if(!nocopy){
+                    /* Select the text field */
+                    voteTokenLinkField.select();
+                    /* Copy the text inside the text field */
+                    document.execCommand("copy");
                 }
+            }
         }
 
         xhttp.open("GET", requestURL, true);
