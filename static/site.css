@@ -120,18 +120,21 @@ input[type="checkbox"]{
     float: left;
     width: 30%;
     word-wrap: break-word;
+    font-size: 30px;
 }
 
 .single-result-ratio{
     float: left;
     margin-left: 20px;
     width: 50%;
+    font-size: 30px;
 }
 
 .percentage-bar{
     background: rgba(255,25,0,0.5);
     padding-left: 10px;
     height: auto;
+    font-size: 30px;
 }
 
 .single-result-abs{
