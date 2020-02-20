@@ -224,6 +224,10 @@ def staticFiles():
 def icon():
     return app.send_static_file('defaultFavicon.ico')
 
-if __name__ == "__main__":
+@app.before_first_request
+def initialization():
     db.init()
+
+if __name__ == "__main__":
+    initialization()
     app.run(host='0.0.0.0')
