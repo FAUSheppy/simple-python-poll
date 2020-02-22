@@ -11,10 +11,26 @@
         <div class="link-container">
             <hr>
 
+            {% if tokens %}
+            Tokens: <br>
+            <div class=token-container>
+                {% for tk in tokens %}
+                    {{ tk }}</br>
+                {% endfor %}
+            </div>
+            <input id=voteTokenLink class="link-field" type=text
+                   value=""
+            </input>
+            <button class="small stretched" onClick="newTokenLink()">
+                Copy new vote-link w. Token
+            </button>
+            {% else %}
             Vote-Link:
             <input class="link-field" type=text
                 value={{ hostname }}viewvote?ident={{ pollIdent }}>
             </input>
+            {% endif %}
+
             <hr>
 
             Results-Link: 
@@ -23,26 +39,8 @@
             </input>
             <hr>
 
-            {% if tokens %}
-            <button class="small stretched" onClick="newTokenLink()">
-                Copy new vote-link w. Token
-            </button>
-            <input id=voteTokenLink class="link-field" type=text
-                   value=""
-            </input>
-            {% endif %}
         </div>
-        <!---
-        {% if tokens %}
-        <hr>
-        <div class="token-container">
-            {% for tk in tokens %}
-                {{ tk }}<br>
-            {% endfor %}
-        </div>
-        {% endif %}
-        -->
-        <hr>
+
         <div class=adm-token-container>
             Admin Access Token: <i id=admToken>{{ admToken }}</i>
         </div>
