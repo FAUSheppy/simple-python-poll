@@ -7,7 +7,17 @@ This software is therefore intended to be an easy deployable, minnimum feature a
 
 A live-demo can be found on [simplepoll.de](https://simplepoll.de).
 
-# Running behind a reverse proxy
+# Usage
+## Flask inbuilt
+
+    ./server.py
+
+## Running with WSGI (waitress)
+
+    apt install python3-waitress (or pip3 install waitress)
+    waitress-serve --host 127.0.0.1 --port 5000 --call 'app:createApp'
+
+## Running behind a reverse proxy
 If you are running the server behind a reverse proxy you must set a *X-REAL-HOSTNAME*-header with the correct hostname. In nginx that would be:
 
     proxy_set_header X-REAL-HOSTNAME $hostname;
